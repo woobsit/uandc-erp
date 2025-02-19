@@ -5,6 +5,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import LoginPage from '@/views/auth/LoginPage.vue';
 import ForgetPassword from '@/views/auth/ForgetPassword.vue';
 import ChangePassword from '@/views/auth/ChangePassword.vue';
+import Dashboard from '@/views/dashboard/Dashboard.vue';
 
 const routes = [
   {
@@ -14,7 +15,7 @@ const routes = [
       {
         path: '',
         name: 'Home',
-        // component: HomePage,
+        component: Dashboard,
       },
     ],
   },
