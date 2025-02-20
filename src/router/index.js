@@ -5,7 +5,9 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import LoginPage from '@/views/auth/LoginPage.vue';
 import ForgetPassword from '@/views/auth/ForgetPassword.vue';
 import ChangePassword from '@/views/auth/ChangePassword.vue';
-import Dashboard from '@/views/dashboard/Dashboard.vue';
+import Dashboard from '@/views/dashboard/DashboardPage.vue';
+import ViewOrders from '@/views/dashboard/ViewOrders.vue';
+import CreateOrders from '@/views/dashboard/CreateOrders.vue';
 
 const routes = [
   {
@@ -16,6 +18,16 @@ const routes = [
         path: '',
         name: 'Home',
         component: Dashboard,
+      },
+      {
+        path: 'orders',
+        name: 'Orders',
+        component: ViewOrders,
+      },
+      {
+        path: 'create-orders',
+        name: 'Create orders',
+        component: CreateOrders,
       },
     ],
   },
