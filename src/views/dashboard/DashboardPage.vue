@@ -1,8 +1,8 @@
 <template>
   <a-layout style="min-height: 100vh">
-    <SideBar />
+    <SidebarTemplate />
     <a-layout>
-      <a-layout-header style="background: #fff; padding: 0" />
+      <HeaderTemplate />
 
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">
@@ -16,15 +16,15 @@
         </div>
       </a-layout-content>
 
-      <a-layout-footer style="text-align: center">
-        UandC Wheels ©2018
-      </a-layout-footer>
+      <FooterTemplate />
     </a-layout>
   </a-layout>
 </template>
 
 <script lang="ts" setup>
-import SideBar from '@/components/template/SideBar.vue';
+import SidebarTemplate from '@/components/template/SidebarTemplate.vue';
+import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
+import FooterTemplate from '@/components/template/FooterTemplate.vue';
 </script>
 
 <style scoped>

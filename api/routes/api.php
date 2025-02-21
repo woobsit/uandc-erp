@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\AdminAuthController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,8 @@ Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
 Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () {
     //Admin Logout
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
+    //show orders
+    Route::get('/show-orders', [OrderController::class, 'showOrders']);
+    //create orders
+    Route::post('/create-orders', [OrderController::class, 'createOrders']);
 });

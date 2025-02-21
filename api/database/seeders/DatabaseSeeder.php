@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             AdminTypeSeeder::class,
             AdminSeeder::class,
+            OrderSeeder::class,
+            RiderSeeder::class,
         ]);
     }
 }

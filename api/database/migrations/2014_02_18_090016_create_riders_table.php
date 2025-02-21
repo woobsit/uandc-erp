@@ -36,11 +36,6 @@ return new class extends Migration
             $table->integer('total_deliveries')->default(0);
             $table->decimal('on_time_delivery_rate', 5, 2)->default(0.00);
 
-            // Financial Information
-            $table->string('payment_method')->nullable();
-            $table->text('bank_account_details')->nullable();
-            $table->decimal('earnings', 10, 2)->default(0.00);
-
             // Additional Metadata
             $table->text('notes')->nullable();
             $table->string('emergency_contact_name')->nullable();
