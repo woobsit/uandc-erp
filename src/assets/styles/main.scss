@@ -37,7 +37,7 @@
 }
 
 .form__input-div {
-  margin-bottom: 15px;
+  margin-bottom: 7px;
 }
 
 .form__input {
@@ -50,6 +50,11 @@
 }
 
 .form__input {
+}
+
+.form__typography--danger{
+  display:block;
+  height:54px;
 }
 
 .form__button {
@@ -99,9 +104,8 @@
 
 .form__logo {
   height: 50px;
-  display:block;
+  display: block;
   margin: 0 auto 30px auto;
-  
 }
 
 @media (min-width: 768px) {

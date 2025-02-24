@@ -1,3 +1,7 @@
-<template>Forget password</template>
-<script lang="ts"></script>
+<template>forget password</template>
+
+<script>
+export default {};
+</script>
+
 <style></style>

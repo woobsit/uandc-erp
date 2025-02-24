@@ -9,28 +9,35 @@
       <h4 class="form__heading--h5">Enter your login details</h4>
 
       <div class="form__input-div">
-        <a-input placeholder="Email" v-model="email" @input="validateEmail">
+        <a-input
+          placeholder="Email"
+          v-model:value="email"
+          @keyup="validateEmailOnKeyup"
+        >
           <template #prefix>
             <user-outlined />
           </template>
         </a-input>
-        <a-typography-text type="danger" v-if="emailError">{{
-          emailError
-        }}</a-typography-text>
+        <a-typography-text
+          class="form__typography--danger"
+          type="danger"
+          v-if="errors.email"
+          >{{ errors.email }}</a-typography-text
+        >
       </div>
 
       <div class="form__input-div">
         <a-input-password
           placeholder="Password"
-          v-model="password"
-          @input="validatePassword"
+          v-model:value="password"
+          @blur="validatePasswordOnBlur"
         >
           <template #prefix>
             <lock-outlined />
           </template>
         </a-input-password>
-        <a-typography-text type="danger" v-if="passwordError">{{
-          passwordError
+        <a-typography-text type="danger" v-if="errors.password">{{
+          errors.password
         }}</a-typography-text>
       </div>
 
@@ -45,87 +52,140 @@
         >
       </div>
 
-      <button type="submit" class="form__button">Login</button>
+      <button type="submit" :disabled="loading" class="login-button">
+        {{ loading ? 'Logging in...' : 'Login' }}
+      </button>
     </form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
-import { emailValidation } from '@/utils/validation.js';
+import { useRouter } from 'vue-router';
+import { emailValidation } from '@/utils/validation';
+import authService from '@/api/services'; // Your authService with userLogin
+
 import logo from '@/assets/images/logo.png'; // Import the image
 
-export default defineComponent({
+export default {
+  name: 'LoginPage',
   components: { UserOutlined, LockOutlined },
   setup() {
     const email = ref(''); // Reactive state for email
     const password = ref(''); // Reactive state for password
     const checked = ref(false); // Reactive state for checkbox
-    const emailError = ref(''); // Reactive state for email error message
-    const passwordError = ref(''); // Reactive state for password error message
-    const submitted = ref(false); // Flag indicating that the form was submitted
+    const errors = ref({ email: '', password: '' }); // Reactive state for email error message
+    const loading = ref(false);
 
-    // Email validation function
-    const validateEmail = (): boolean => {
-      if (!submitted.value) return true; // Skip validation if form hasn't been submitted
+    // Vue Router instance for navigation
+    const router = useRouter();
+
+    function validateEmailOnKeyup() {
       if (!email.value) {
-        emailError.value = 'Email is required';
-        return false;
+        errors.value.email = 'Email is required';
       } else if (!emailValidation(email.value)) {
-        emailError.value = 'Invalid email address';
-        return false;
+        errors.value.email = 'Invalid email address';
       } else {
-        emailError.value = '';
-        return true;
+        errors.value.email = '';
       }
-    };
+    }
 
-    // Password validation function
-    const validatePassword = (): boolean => {
-      if (!submitted.value) return true; // Skip validation if form hasn't been submitted
+    function validatePasswordOnBlur() {
       if (!password.value) {
-        passwordError.value = 'Password is required';
-        return false;
+        errors.value.password = 'Password is required';
       } else {
-        passwordError.value = '';
-        return true;
+        errors.value.password = '';
+      }
+    }
+
+    function handleSubmit() {
+      validateEmailOnKeyup();
+      validatePasswordOnBlur();
+
+      if (!errors.value.email && !errors.value.password) {
+         // The login function that makes the request
+    const login = async () => {
+      loading.value = true;
+      try {
+        // Call the authService's userLogin method
+        const response = await authService.userLogin(
+          email.value,
+          password.value,
+          rememberMe.value
+        );
+        
+        // Process response based on status code
+        if (response.status === 200) {
+          // Combine token, user info, and any additional data
+          const userInfo = {
+            token: response.token,
+            user_info: {
+              firstname: response.user_info.firstname,
+              surname: response.user_info.surname,
+              other_names: response.user_info.other_names,
+              email: response.user_info.email,
+              photo: response.user_info.photo,
+              admission_status: response.user_info.admission_status,
+              // ... include other properties as needed
+            },
+            website_info: response.website_info,
+          };
+          
+          // Stringify the combined data for the cookie
+          const cookieData = JSON.stringify(userInfo);
+          
+          // Set the cookie based on the rememberMe value
+          // Here we assume that if rememberMe is true, we keep the cookie for 30 days, otherwise 1 day
+          if (!Cookies.get("auth_admin_data")) {
+            const expirationTime = rememberMe.value ? 30 : 1;
+            Cookies.set("auth_user_data", cookieData, {
+              expires: expirationTime,
+              secure: true,
+              sameSite: "lax",
+            });
+            
+            // Navigate based on the user's admission status
+            if (response.user_info.admission_status === "Admitted") {
+              router.push('/home');
+            } else {
+              router.push('/admission');
+            }
+          } else if (!Cookies.get("auth_user_data")) {
+            router.push('/');
+          }
+        } else if (response.status === 422) {
+          notify("error", "Input Validation", response.message);
+        } else if (response.status === 409) {
+          notify("error", "Login Conflict", response.message);
+        } else if (response.status === 401) {
+          notify("error", "User Login", response.message);
+        } else if (response.status === 500) {
+          notify("error", "System Error", response.message);
+        } else {
+          notify("error", "Error", "An unexpected error occurred");
+        }
+      } catch (error) {
+        notify("error", "Error", "An unexpected error occurred. Please try again.");
+      } finally {
+        loading.value = false;
       }
     };
-
-    // Handle form submission
-    const handleSubmit = () => {
-      submitted.value = true; // Mark that submission was attempted
-      const isEmailValid = validateEmail();
-      const isPasswordValid = validatePassword();
-
-      if (isEmailValid && isPasswordValid) {
-        // Form is valid, proceed with login logic
-        console.log('Form submitted successfully!');
-        console.log('Email:', email.value);
-        console.log('Password:', password.value);
-        console.log('Remember me:', checked.value);
-
-        // You can add your login API call or navigation logic here
-      } else {
-        // Form is invalid, do not proceed
-        console.log('Form validation failed.');
       }
-    };
+    }
 
     return {
       email,
       password,
       checked,
-      emailError,
-      passwordError,
+      errors,
       handleSubmit,
       logo,
-      validateEmail, // Return validateEmail for use in the template
-      validatePassword, // Return validatePassword for use in the template
+      validateEmailOnKeyup,
+      validatePasswordOnBlur,
     };
   },
-});
+};
 </script>
 
 <style lang="scss" scoped></style>
