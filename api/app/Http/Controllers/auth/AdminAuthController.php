@@ -34,12 +34,12 @@ class AdminAuthController extends Controller
 
             $credentials = $request->only('email', 'password');
 
-            // Check if the user is already logged in
-            $userToken = $request->cookie('auth_user_data');
-            if ($userToken) {
+            // Check if the admin is already logged in
+            $adminToken = $request->cookie('auth_admin_data');
+            if ($adminToken) {
                 return response()->json([
                     'status' => 403,
-                    'message' => 'You are already logged in as a user. Please log out first.',
+                    'message' => 'You are already logged in as an admin. Please log out first.',
                 ]);
             }
 
@@ -61,20 +61,18 @@ class AdminAuthController extends Controller
                     'surname' => $admin->surname,
                     'email' => $admin->email,
                     'photo' => $admin->photo,
-                    'admin_type ' => $admin->admin_type_id,
+                    'phone' => $admin->phone,
+                    'admin_type' => $admin->admin_type_id,
                 ];
 
                 $websiteInfo = Setting::all();
-                // header('Content-Type: application/json');
-                // var_dump(headers_list());
-                // exit;
-                //Log::info("info", ['token' => $token]);
+
                 return response()->json([
                     'status' => 200,
                     'token' => $token,
                     'remember_me' => $rememberMe,
                     'admin_info' => $adminInfo,
-                    'website_info' => $websiteInfo
+                    'settings' => $websiteInfo
                 ]);
             } else {
                 return response()->json(['status' => 401, 'message' => 'Wrong login details entered'],);

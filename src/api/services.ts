@@ -1,7 +1,7 @@
 import handleRequest from '@/api/handleRequest';
 
 const authService = {
-  userLogin: (email: string, password: string, remember_token: string) =>
+  adminLogin: (email: string, password: string, remember_token: boolean) =>
     handleRequest('/admin-login', 'post', { email, password, remember_token }),
 };
 

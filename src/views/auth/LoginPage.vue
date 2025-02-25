@@ -13,6 +13,7 @@
           placeholder="Email"
           v-model:value="email"
           @keyup="validateEmailOnKeyup"
+          name="email"
         >
           <template #prefix>
             <user-outlined />
@@ -31,6 +32,7 @@
           placeholder="Password"
           v-model:value="password"
           @blur="validatePasswordOnBlur"
+          name="password"
         >
           <template #prefix>
             <lock-outlined />
@@ -43,8 +45,8 @@
 
       <div class="form__remember-me-div">
         <div class="form__checkbox-div">
-          <a-form-item name="remember">
-            <a-checkbox v-model="checked">Remember me</a-checkbox>
+          <a-form-item>
+            <a-checkbox v-model:checked="remember_me">Remember me</a-checkbox>
           </a-form-item>
         </div>
         <router-link to="" class="form__forget-password-text"
@@ -52,7 +54,7 @@
         >
       </div>
 
-      <button type="submit" :disabled="loading" class="login-button">
+      <button type="submit" :disabled="loading" class="form__button">
         {{ loading ? 'Logging in...' : 'Login' }}
       </button>
     </form>
@@ -64,8 +66,9 @@ import { ref } from 'vue';
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import { emailValidation } from '@/utils/validation';
-import authService from '@/api/services'; // Your authService with userLogin
-
+import authService from '@/api/services';
+import Cookies from 'js-cookie';
+import { notify } from '@/utils/notification';
 import logo from '@/assets/images/logo.png'; // Import the image
 
 export default {
@@ -74,7 +77,7 @@ export default {
   setup() {
     const email = ref(''); // Reactive state for email
     const password = ref(''); // Reactive state for password
-    const checked = ref(false); // Reactive state for checkbox
+    const remember_me = ref(false); // Reactive state for checkbox
     const errors = ref({ email: '', password: '' }); // Reactive state for email error message
     const loading = ref(false);
 
@@ -104,85 +107,120 @@ export default {
       validatePasswordOnBlur();
 
       if (!errors.value.email && !errors.value.password) {
-         // The login function that makes the request
-    const login = async () => {
-      loading.value = true;
-      try {
-        // Call the authService's userLogin method
-        const response = await authService.userLogin(
-          email.value,
-          password.value,
-          rememberMe.value
-        );
-        
-        // Process response based on status code
-        if (response.status === 200) {
-          // Combine token, user info, and any additional data
-          const userInfo = {
-            token: response.token,
-            user_info: {
-              firstname: response.user_info.firstname,
-              surname: response.user_info.surname,
-              other_names: response.user_info.other_names,
-              email: response.user_info.email,
-              photo: response.user_info.photo,
-              admission_status: response.user_info.admission_status,
-              // ... include other properties as needed
-            },
-            website_info: response.website_info,
-          };
-          
-          // Stringify the combined data for the cookie
-          const cookieData = JSON.stringify(userInfo);
-          
-          // Set the cookie based on the rememberMe value
-          // Here we assume that if rememberMe is true, we keep the cookie for 30 days, otherwise 1 day
-          if (!Cookies.get("auth_admin_data")) {
-            const expirationTime = rememberMe.value ? 30 : 1;
-            Cookies.set("auth_user_data", cookieData, {
-              expires: expirationTime,
-              secure: true,
-              sameSite: "lax",
-            });
-            
-            // Navigate based on the user's admission status
-            if (response.user_info.admission_status === "Admitted") {
+        // The login function that makes the request
+        const login = async () => {
+          loading.value = true;
+          try {
+            // Call the authService's adminLogin method
+            const response = await authService.adminLogin(
+              email.value,
+              password.value,
+              remember_me.value
+            );
+
+            // Process response based on status code
+            if (response.status === 200) {
+              // Combine token, admin info, and any additional data
+              const adminInfo = {
+                token: response.token,
+                admin_info: {
+                  first_name: response.admin_info.firstname,
+                  surname: response.admin_info.surname,
+                  other_names: response.admin_info.other_names,
+                  email: response.admin_info.email,
+                  photo: response.admin_info.photo,
+                  phone: response.admin_info.phone,
+                },
+                remember_me: response.admin_info.remember_me,
+                settings: response.settings,
+              };
+
+              // Set the cookie based on the remember_me value
+              // Here we assume that if remember_me is true, we keep the cookie for 30 days, otherwise 1 day
+
+              //Searching if there is cookie before
+              const cookieDataString = Cookies.get('auth_admin_data');
+              let rememberMeCode: string | boolean | undefined;
+
+              if (cookieDataString) {
+                const parsedCookie = JSON.parse(cookieDataString);
+                rememberMeCode = parsedCookie.admin_info.remember_me;
+              } else {
+                rememberMeCode = undefined;
+              }
+
+              // Stringify the combined data for the cookie
+              const cookieData = JSON.stringify(adminInfo);
+
+              if (
+                !cookieDataString ||
+                rememberMeCode !== adminInfo.remember_me
+              ) {
+                const expirationTime = remember_me.value ? 30 : 1;
+                Cookies.set('auth_admin_data', cookieData, {
+                  expires: expirationTime,
+                  secure: true,
+                  sameSite: 'lax',
+                });
+              }
+
+              // Navigate to dashboad
               router.push('/home');
+            } else if (response.status === 422) {
+              notify({
+                type: 'error',
+                message: 'Input Validation',
+                description: response.message,
+              });
+            } else if (response.status === 409) {
+              notify({
+                type: 'error',
+                message: 'Login Conflict',
+                description: response.message,
+              });
+            } else if (response.status === 401) {
+              notify({
+                type: 'error',
+                message: 'User Login',
+                description: response.message,
+              });
+            } else if (response.status === 500) {
+              notify({
+                type: 'error',
+                message: 'System Error',
+                description: response.message,
+              });
             } else {
-              router.push('/admission');
+              notify({
+                type: 'error',
+                message: 'Error',
+                description: 'An unexpected error occurred',
+              });
             }
-          } else if (!Cookies.get("auth_user_data")) {
-            router.push('/');
+          } catch (error) {
+            notify({
+              type: 'error',
+              message: 'Error',
+              description: 'An unexpected error occurred. Please try again.',
+            });
+          } finally {
+            loading.value = false;
           }
-        } else if (response.status === 422) {
-          notify("error", "Input Validation", response.message);
-        } else if (response.status === 409) {
-          notify("error", "Login Conflict", response.message);
-        } else if (response.status === 401) {
-          notify("error", "User Login", response.message);
-        } else if (response.status === 500) {
-          notify("error", "System Error", response.message);
-        } else {
-          notify("error", "Error", "An unexpected error occurred");
-        }
-      } catch (error) {
-        notify("error", "Error", "An unexpected error occurred. Please try again.");
-      } finally {
-        loading.value = false;
-      }
-    };
+        };
+        login();
       }
     }
 
     return {
       email,
       password,
-      checked,
+      remember_me,
       errors,
       handleSubmit,
       logo,
       validateEmailOnKeyup,
       validatePasswordOnBlur,
+      loading,
     };
   },
 };

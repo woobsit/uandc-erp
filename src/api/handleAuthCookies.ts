@@ -9,7 +9,7 @@ export function getAuthAdminData() {
 
     return {
       token: authData.token,
-      admin_user: authData.admin_user,
+      admin_user: authData.admin_info,
       website_info: authData.website_info,
     };
   }

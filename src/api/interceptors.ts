@@ -1,17 +1,13 @@
 import axiosInstance from './axiosInstance';
 //js-cookies
 import Cookies from 'js-cookie';
-import {
-  getAuthAdminData,
-  getAuthUserData,
-} from '@/middleware/handleAuthCookies';
+import { getAuthAdminData, getAuthUserData } from '@/api/handleAuthCookies';
 
 const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
     (config) => {
       const authAdminData = getAuthAdminData();
       const authUserData = getAuthUserData();
-
       // List of routes that don't require authentication
       // const publicRoutes = ['/get-all-courses', '/website-info'];
 
@@ -21,6 +17,7 @@ const setupInterceptors = () => {
         config.headers['Authorization'] = `Bearer ${authUserData.token}`;
       } else if (authAdminData && authAdminData.token) {
         config.headers['Authorization'] = `Bearer ${authAdminData.token}`;
+        console.log(authAdminData.token);
       }
 
       return config;
@@ -41,7 +38,7 @@ const setupInterceptors = () => {
       if (authAdminData) Cookies.remove('auth_admin_data');
 
       // Determine the redirection URL and message
-      const redirectUrl = '/';
+      const redirectUrl = '/auth/login';
       let alertMessage = '';
 
       if (error.response && error.response.status === 401) {
