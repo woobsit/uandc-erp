@@ -19,12 +19,11 @@
             <user-outlined />
           </template>
         </a-input>
-        <a-typography-text
-          class="form__typography--danger"
-          type="danger"
-          v-if="errors.email"
-          >{{ errors.email }}</a-typography-text
-        >
+        <div class="form__typography--danger">
+          <a-typography-text type="danger" v-if="errors.email">{{
+            errors.email
+          }}</a-typography-text>
+        </div>
       </div>
 
       <div class="form__input-div">
@@ -38,9 +37,11 @@
             <lock-outlined />
           </template>
         </a-input-password>
-        <a-typography-text type="danger" v-if="errors.password">{{
-          errors.password
-        }}</a-typography-text>
+        <div class="form__typography--danger">
+          <a-typography-text type="danger" v-if="errors.password">{{
+            errors.password
+          }}</a-typography-text>
+        </div>
       </div>
 
       <div class="form__remember-me-div">
@@ -179,6 +180,12 @@ export default {
                 description: response.message,
               });
             } else if (response.status === 401) {
+              notify({
+                type: 'error',
+                message: 'User Login',
+                description: response.message,
+              });
+            } else if (response.status === 403) {
               notify({
                 type: 'error',
                 message: 'User Login',

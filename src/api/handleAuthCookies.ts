@@ -16,6 +16,7 @@ export function getAuthAdminData() {
   return null;
 }
 
+//This will be used for the user
 export function getAuthUserData() {
   const authUserDataCookie = Cookies.get('auth_user_data');
   if (authUserDataCookie) {
