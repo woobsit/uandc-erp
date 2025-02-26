@@ -33,7 +33,9 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "src/**/*.d.ts",
+    "src/**/*.js", "src/middleware/handleAuthCookies.jsts",
   ],
   "exclude": [
     "node_modules"
