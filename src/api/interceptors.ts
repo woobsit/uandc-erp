@@ -17,7 +17,6 @@ const setupInterceptors = () => {
         config.headers['Authorization'] = `Bearer ${authUserData.token}`;
       } else if (authAdminData && authAdminData.token) {
         config.headers['Authorization'] = `Bearer ${authAdminData.token}`;
-        console.log(authAdminData.token);
       }
 
       return config;

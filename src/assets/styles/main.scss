@@ -33,7 +33,7 @@
 
 .form__heading--h5 {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 }
 
 .form__input-div {
@@ -54,7 +54,7 @@
 
 .form__typography--danger{
   display:block;
-  height:54px;
+ height:18px;
 }
 
 .form__button {
@@ -114,4 +114,9 @@
     margin-right: auto;
     width: 600px;
   }
+}
+
+/*Ant vue ui style overide*/
+.form__remember-me-div :where(.css-dev-only-do-not-override-1p3hq3p).ant-form-item {
+ margin-bottom: 0;
 }
