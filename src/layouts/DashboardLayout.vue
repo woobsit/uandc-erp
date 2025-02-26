@@ -1,9 +1,6 @@
 <template>
   <div>
-    <header>Dashboard Header</header>
     <router-view />
-    <!-- Dashboard pages will be rendered here -->
-    <footer>Dashboard Footer</footer>
   </div>
 </template>
 

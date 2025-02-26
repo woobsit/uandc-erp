@@ -5,10 +5,10 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import LoginPage from '@/views/auth/LoginPage.vue';
 import ForgetPassword from '@/views/auth/ForgetPassword.vue';
 import ChangePassword from '@/views/auth/ChangePassword.vue';
-//import Dashboard from '@/views/dashboard/DashboardPage.vue';
-//import ViewOrders from '@/views/dashboard/ViewOrders.vue';
-//import CreateOrders from '@/views/dashboard/CreateOrders.vue';
-//import OrderHistory from '@/views/dashboard/OrderHistory.vue';
+import Dashboard from '@/views/dashboard/DashboardPage.vue';
+import ViewOrders from '@/views/dashboard/ViewOrders.vue';
+import CreateOrders from '@/views/dashboard/CreateOrders.vue';
+import OrderHistory from '@/views/dashboard/OrderHistory.vue';
 import Cookies from 'js-cookie';
 
 const routes = [
@@ -16,29 +16,31 @@ const routes = [
     path: '/',
     component: DashboardLayout,
     children: [
-      // {
-      //   path: 'home',
-      //   name: 'Home',
-      //   component: Dashboard,
-      //   meta: { requiresAuth: true },
-      // },
-      // {
-      //   path: 'view-orders',
-      //   name: 'Orders',
-      //   component: ViewOrders,
-      //   meta: { requiresAuth: true },
-      // },
-      // {
-      //   path: 'create-orders',
-      //   name: 'Create orders',
-      //   component: CreateOrders,
-      //   meta: { requiresAuth: true },
-      // },
-      // {
-      //   path: 'orders-history',
-      //   name: 'History',
-      //   component: OrderHistory,
-      // },
+
+       {
+         path: 'home',
+         name: 'Home',
+         component: Dashboard,
+         meta: { requiresAuth: true },
+       },
+       {
+         path: 'view-orders',
+         name: 'Orders',
+         component: ViewOrders,
+         meta: { requiresAuth: true },
+       },
+       {
+         path: 'create-orders',
+         name: 'Create orders',
+         component: CreateOrders,
+         meta: { requiresAuth: true },
+       },
+       {
+         path: 'orders-history',
+         name: 'History',
+         component: OrderHistory,
+       },
+
     ],
   },
   {
