@@ -17,7 +17,7 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'full_name'               => $this->faker->name,
+            'fullname'               => $this->faker->name,
             'pickup_address'          => $this->faker->address,
             'delivery_address'        => $this->faker->address,
             'item_description'        => $this->faker->paragraph,

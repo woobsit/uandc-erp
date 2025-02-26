@@ -27,7 +27,7 @@ import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 #components-layout-demo-side .logo {
   height: 32px;
   margin: 16px;
