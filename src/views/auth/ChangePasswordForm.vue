@@ -1,3 +1,7 @@
 <template>Change password</template>
-<script lang="ts"></script>
+
+<script>
+export default {};
+</script>
+
 <style></style>
