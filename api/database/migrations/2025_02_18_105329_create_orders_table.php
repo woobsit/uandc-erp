@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('rider_id')->nullable();
-            $table->foreign('rider_id')->references('id')->on('riders');
-            $table->string('full_name');
+            $table->string('fullname');
             $table->text('pickup_address', 1000);
             $table->text('delivery_address', 1000);
             $table->text('item_description');
