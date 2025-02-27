@@ -1,18 +1,26 @@
 <template>
   <a-layout-header style="background: #fff; padding: 0">
-    <div class="demo-dropdown-wrap">
-      <a-dropdown-button>
-        Profile
-        <template #overlay>
-          <a-menu @click="handleMenuClick">
-            <a-menu-item key="1">
-              <UserOutlined />
-              Logout
-            </a-menu-item>
-          </a-menu>
-        </template>
-        <template #icon><UserOutlined /></template>
-      </a-dropdown-button>
+    <div class="topheader">
+      <a-breadcrumb>
+        <a-breadcrumb-item>Home</a-breadcrumb-item>
+        <a-breadcrumb-item><a href="">Application Center</a></a-breadcrumb-item>
+        <a-breadcrumb-item><a href="">Application List</a></a-breadcrumb-item>
+        <a-breadcrumb-item>An Application</a-breadcrumb-item>
+      </a-breadcrumb>
+      <div class="demo-dropdown-wrap">
+        <a-dropdown-button :trigger="['click']">
+          Profile
+          <template #overlay>
+            <a-menu @click="handleMenuClick">
+              <a-menu-item key="1">
+                <UserOutlined />
+                Logout
+              </a-menu-item>
+            </a-menu>
+          </template>
+          <template #icon><UserOutlined /></template>
+        </a-dropdown-button>
+      </div>
     </div>
   </a-layout-header>
 </template>
