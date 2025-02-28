@@ -5,18 +5,19 @@
       <a-layout>
         <HeaderTemplate />
         <div class="content-container">
-          <a-table
-            :columns="columns"
-            :data-source="data"
-            :row-class-name="
-              (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
-            "
-            bordered
-            sticky
-            :scroll="{ x: 1500, y: 240 }"
-            @resizeColumn="handleResizeColumn"
-          >
-            <!-- <template #headerCell="{ column }">
+          <div class="table-container">
+            <a-table
+              :columns="columns"
+              :data-source="data"
+              :row-class-name="rowClassName"
+              bordered
+              sticky
+              :scroll="{ x: 1500, y: 240 }"
+              @resizeColumn="handleResizeColumn"
+              class="table-list"
+              size="small"
+            >
+              <!-- <template #headerCell="{ column }">
           <template v-if="column.key === 'name'">
             <span>
               <smile-outlined />
@@ -25,43 +26,45 @@
           </template>
         </template> -->
 
-            <template #bodyCell="{ column, record }">
-              <template v-if="column.key === 'name'">
-                <a>
-                  {{ record.name }}
-                </a>
-              </template>
-              <template v-else-if="column.key === 'tags'">
-                <span>
-                  <a-tag
-                    v-for="tag in record.tags"
-                    :key="tag"
-                    :color="
-                      tag === 'loser'
-                        ? 'volcano'
-                        : tag.length > 5
-                          ? 'geekblue'
-                          : 'green'
-                    "
-                  >
-                    {{ tag.toUpperCase() }}
-                  </a-tag>
-                </span>
-              </template>
-              <template v-else-if="column.key === 'action'">
-                <span>
-                  <a>Invite 一 {{ record.name }}</a>
-                  <a-divider type="vertical" />
-                  <a>Delete</a>
-                  <a-divider type="vertical" />
-                  <a class="ant-dropdown-link">
-                    More actions
-                    <down-outlined />
+              <template #bodyCell="{ column, record }">
+                <template v-if="column.key === 'name'">
+                  <a>
+                    {{ record.name }}
                   </a>
-                </span>
+                </template>
+                <template v-else-if="column.key === 'tags'">
+                  <span>
+                    <a-tag
+                      v-for="tag in record.tags"
+                      :key="tag"
+                      :color="
+                        tag === 'loser'
+                          ? 'volcano'
+                          : tag.length > 5
+                            ? 'geekblue'
+                            : 'green'
+                      "
+                    >
+                      {{ tag.toUpperCase() }}
+                    </a-tag>
+                  </span>
+                </template>
+                <template v-else-if="column.key === 'action'">
+                  <span>
+                    <a>Invite 一 {{ record.name }}</a>
+                    <a-divider type="vertical" />
+                    <a>Delete</a>
+                    <a-divider type="vertical" />
+                    <a class="ant-dropdown-link">
+                      More actions
+                      <down-outlined />
+                    </a>
+                  </span>
+                </template>
               </template>
-            </template>
-          </a-table>
+            </a-table>
+            <div class="order-chart">chart</div>
+          </div>
         </div>
         <FooterTemplate />
       </a-layout>
@@ -70,11 +73,26 @@
 </template>
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { DownOutlined } from '@ant-design/icons-vue';
 import SideBar from '@/components/template/SidebarTemplate.vue';
 import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
+
+interface Column {
+  width?: number;
+  // ... you can add more properties if needed
+}
+
+// Define a function with explicit types for rowClassName
+const rowClassName = (_record: any, index: number): string | null => {
+  return index % 2 === 1 ? 'table-striped' : null;
+};
+
+// Define a function with explicit types for handleResizeColumn
+function handleResizeColumn(w: number, col: Column): void {
+  col.width = w;
+}
 
 const columns = ref<TableColumnsType>([
   {
@@ -82,16 +100,21 @@ const columns = ref<TableColumnsType>([
     dataIndex: 'name',
     key: 'name',
     ellipsis: true,
+    width: 150,
   },
   {
     title: 'Phone number',
     key: 'phone',
     dataIndex: 'phone',
+    ellipsis: true,
+    width: 130,
   },
   {
     title: 'Pickup time',
     dataIndex: 'pickup-time',
     key: 'pickup-time',
+    ellipsis: true,
+    width: 110,
   },
   {
     title: 'Pickup address',
@@ -99,69 +122,90 @@ const columns = ref<TableColumnsType>([
     key: 'pickup-address',
     ellipsis: true,
     resizable: true,
-    width: 100,
-    minWidth: 100,
-    maxWidth: 200,
+    width: 200,
   },
   {
     title: 'Delivery address',
     key: 'delivery-address',
     dataIndex: 'delivery-address',
     ellipsis: true,
+    width: 200,
   },
   {
     title: 'Delivery type',
     key: 'type',
     dataIndex: 'type',
+    ellipsis: true,
+    width: 130,
   },
   {
     title: 'Status',
     key: 'status',
     dataIndex: 'status',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Payment status',
     key: 'payment-status',
     dataIndex: 'payment-status',
+    ellipsis: true,
+    width: 150,
   },
   {
     title: 'Total cost',
     key: 'cost',
     dataIndex: 'cost',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Discount',
     key: 'discount',
     dataIndex: 'discount',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Time slot',
     key: 'slot',
     dataIndex: 'slot',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Distance',
     key: 'distance',
     dataIndex: 'distance',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Estimated delivery time',
     key: 'estimated-time',
     dataIndex: 'estimated-time',
+    width: 100,
+    ellipsis: true,
   },
   {
     title: 'Actual delivery time',
     key: 'actual-time',
     dataIndex: 'actual-time',
+    width: 100,
+    ellipsis: true,
   },
   {
     title: 'Date',
     key: 'date',
     dataIndex: 'date',
+    ellipsis: true,
+    width: 100,
   },
   {
     title: 'Action',
     key: 'action',
+    ellipsis: true,
+    width: 100,
   },
 ]);
 
@@ -181,10 +225,6 @@ const data = [
     tags: ['loser'],
   },
 ];
-
-function handleResizeColumn(w, col) {
-  col.width = w;
-}
 </script>
 
 <style scoped>
