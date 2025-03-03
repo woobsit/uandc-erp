@@ -4,10 +4,11 @@ import Cookies from 'js-cookie';
 import { getAuthAdminData, getAuthUserData } from '@/api/handleAuthCookies';
 
 const setupInterceptors = () => {
+  const authAdminData = getAuthAdminData();
+  const authUserData = getAuthUserData();
+  console.log(authAdminData);
   axiosInstance.interceptors.request.use(
     (config) => {
-      const authAdminData = getAuthAdminData();
-      const authUserData = getAuthUserData();
       // List of routes that don't require authentication
       // const publicRoutes = ['/get-all-courses', '/website-info'];
 
@@ -29,8 +30,8 @@ const setupInterceptors = () => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      const authAdminData = getAuthAdminData();
-      const authUserData = getAuthUserData();
+      // const authAdminData = getAuthAdminData();
+      // const authUserData = getAuthUserData();
 
       // Remove cookies if they exist
       if (authUserData) Cookies.remove('auth_user_data');

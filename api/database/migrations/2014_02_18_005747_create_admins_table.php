@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('other_names', 30)->nullable();
             $table->string('email')->unique();
             $table->string('password');
+            $table->foreignId('logistics_type_id')
+                ->constrained()
+                ->onUpdate('cascade');
             $table->enum('gender', ['Male', 'Female']);
             $table->date('date_of_birth')->nullable();
             $table->text('address', 1000)->nullable();

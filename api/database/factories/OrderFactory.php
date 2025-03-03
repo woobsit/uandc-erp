@@ -40,6 +40,8 @@ class OrderFactory extends Factory
             // Set rider_id to null by default. If you have riders seeded, you can assign a random rider id.
             'rider_id'                => null,
             'rider_notes'             => $this->faker->optional()->sentence,
+            'admin_id'                => 1,
+            'user_id'                => null,
             'pickup_time'             => $this->faker->optional()->dateTime,
             'delivery_attempts'       => $this->faker->numberBetween(0, 5),
             'failed_delivery_reason'  => $this->faker->optional()->sentence,

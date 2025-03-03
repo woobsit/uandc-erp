@@ -16,50 +16,106 @@
               @resizeColumn="handleResizeColumn"
               class="table-list"
               size="small"
+              :pagination="pagination"
             >
-              <!-- <template #headerCell="{ column }">
-          <template v-if="column.key === 'name'">
-            <span>
-              <smile-outlined />
-              #
-            </span> 
-          </template>
-        </template> -->
-
               <template #bodyCell="{ column, record }">
-                <template v-if="column.key === 'name'">
-                  <a>
-                    {{ record.name }}
-                  </a>
+                <template v-if="loading">
+                  <a-skeleton active />
+                  <a-skeleton active />
+                  <a-skeleton active />
+                  <a-skeleton active />
                 </template>
-                <template v-else-if="column.key === 'tags'">
-                  <span>
-                    <a-tag
-                      v-for="tag in record.tags"
-                      :key="tag"
-                      :color="
-                        tag === 'loser'
-                          ? 'volcano'
-                          : tag.length > 5
-                            ? 'geekblue'
-                            : 'green'
-                      "
-                    >
-                      {{ tag.toUpperCase() }}
-                    </a-tag>
-                  </span>
-                </template>
-                <template v-else-if="column.key === 'action'">
-                  <span>
-                    <a>Invite 一 {{ record.name }}</a>
-                    <a-divider type="vertical" />
-                    <a>Delete</a>
-                    <a-divider type="vertical" />
-                    <a class="ant-dropdown-link">
-                      More actions
-                      <down-outlined />
-                    </a>
-                  </span>
+                <template v-else>
+                  <template v-if="noRecord">
+                    <a-typography-text> No records</a-typography-text>
+                  </template>
+                  <template v-else>
+                    <template v-if="column.key === 'name'">
+                      <a>
+                        {{ record.name }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'phone'">
+                      <a>
+                        {{ record.phone }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'pickup_time'">
+                      <a>
+                        {{ record.pickup_time }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'pickup_address'">
+                      <a>
+                        {{ record.pickup_address }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'delivery_address'">
+                      <a>
+                        {{ record.delivery_address }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'type'">
+                      <a>
+                        {{ record.type }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'status'">
+                      <a>
+                        {{ record.status }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'payment_status'">
+                      <a>
+                        {{ record.payment_status }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'cost'">
+                      <a>
+                        {{ record.cost }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'discount'">
+                      <a>
+                        {{ record.discount }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'slot'">
+                      <a>
+                        {{ record.slot }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'distance'">
+                      <a>
+                        {{ record.distance }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'discount'">
+                      <a>
+                        {{ record.discount }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'estimated_time'">
+                      <a>
+                        {{ record.estimated_time }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'actual_time'">
+                      <a>
+                        {{ record.actual_time }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'date'">
+                      <a>
+                        {{ record.date }}
+                      </a>
+                    </template>
+                    <template v-if="column.key === 'action'">
+                      <a>
+                        {{ record.action }}
+                      </a>
+                    </template>
+                  </template>
                 </template>
               </template>
             </a-table>
@@ -72,12 +128,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { DownOutlined } from '@ant-design/icons-vue';
+import { ref, onMounted, computed } from 'vue';
 import SideBar from '@/components/template/SidebarTemplate.vue';
 import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
+import authService from '@/api/services';
+import { notify } from '@/utils/notification';
 
 interface Column {
   width?: number;
@@ -111,23 +168,23 @@ const columns = ref<TableColumnsType>([
   },
   {
     title: 'Pickup time',
-    dataIndex: 'pickup-time',
-    key: 'pickup-time',
+    dataIndex: 'pickup_time',
+    key: 'pickup_time',
     ellipsis: true,
     width: 110,
   },
   {
     title: 'Pickup address',
-    dataIndex: 'pickup-address',
-    key: 'pickup-address',
+    dataIndex: 'pickup_address',
+    key: 'pickup_address',
     ellipsis: true,
     resizable: true,
     width: 200,
   },
   {
     title: 'Delivery address',
-    key: 'delivery-address',
-    dataIndex: 'delivery-address',
+    key: 'delivery_address',
+    dataIndex: 'delivery_address',
     ellipsis: true,
     width: 200,
   },
@@ -147,8 +204,8 @@ const columns = ref<TableColumnsType>([
   },
   {
     title: 'Payment status',
-    key: 'payment-status',
-    dataIndex: 'payment-status',
+    key: 'payment_status',
+    dataIndex: 'payment_status',
     ellipsis: true,
     width: 150,
   },
@@ -182,15 +239,15 @@ const columns = ref<TableColumnsType>([
   },
   {
     title: 'Estimated delivery time',
-    key: 'estimated-time',
-    dataIndex: 'estimated-time',
+    key: 'estimated_time',
+    dataIndex: 'estimated_time',
     width: 100,
     ellipsis: true,
   },
   {
     title: 'Actual delivery time',
-    key: 'actual-time',
-    dataIndex: 'actual-time',
+    key: 'actual_time',
+    dataIndex: 'actual_time',
     width: 100,
     ellipsis: true,
   },
@@ -209,22 +266,53 @@ const columns = ref<TableColumnsType>([
   },
 ]);
 
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-];
+const loading = ref(true);
+let data = ref<any[]>([]);
+const noRecord = ref(false);
+const fetchOrders = async () => {
+  loading.value = true;
+  try {
+    // Call the authService's getAllOrders method
+    const response = await authService.getAllOrders();
+    if (response.status === 201) {
+      data = response.result;
+    } else if (response.status === 404 || response.result.length === 0) {
+      noRecord.value = true;
+    } else if (response.status === 500) {
+      notify({
+        type: 'error',
+        message: 'System Error',
+        description: response.message,
+      });
+    } else {
+      notify({
+        type: 'error',
+        message: 'Error',
+        description: 'An unexpected error occurred',
+      });
+    }
+  } catch (error) {
+    notify({
+      type: 'error',
+      message: 'Error',
+      description: 'An unexpected error occurred. Please try again.',
+    });
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Trigger fetchOrders on component mount
+onMounted(() => {
+  fetchOrders();
+});
+
+// Optionally, if you need pagination support:
+const pagination = computed(() => ({
+  total: 200,
+  current: 1, // Adjust as needed
+  pageSize: 10, // Adjust as needed
+}));
 </script>
 
 <style scoped>

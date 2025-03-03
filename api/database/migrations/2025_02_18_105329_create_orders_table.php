@@ -47,6 +47,14 @@ return new class extends Migration
             $table->foreign('rider_id')->references('id')->on('riders');
             $table->text('rider_notes')->nullable();
 
+            // Admin Information
+            $table->unsignedBigInteger('admin_id')->nullable();
+            $table->foreign('admin_id')->references('id')->on('admins');
+
+            // User Information
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
+
             // Order Tracking
             $table->timestamp('pickup_time')->nullable();
             $table->integer('delivery_attempts')->default(0);
