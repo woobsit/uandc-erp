@@ -25,7 +25,7 @@ Route::middleware(['api'])->prefix('v1')->group(function () {
 Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {});
 
 
-Route::middleware(['auth:api', 'scope:admin'])->prefix('v1')->group(function () {
+Route::middleware(['auth:admin', 'scope:admin'])->prefix('v1')->group(function () {
     //Admin Logout
     Route::post('/admin-logout', [AdminAuthController::class, 'adminLogout']);
     //show orders

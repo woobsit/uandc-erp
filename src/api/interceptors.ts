@@ -4,15 +4,19 @@ import Cookies from 'js-cookie';
 import { getAuthAdminData, getAuthUserData } from '@/api/handleAuthCookies';
 
 const setupInterceptors = () => {
-  const authAdminData = getAuthAdminData();
-  const authUserData = getAuthUserData();
-  console.log(authAdminData);
   axiosInstance.interceptors.request.use(
     (config) => {
-      // List of routes that don't require authentication
-      // const publicRoutes = ['/get-all-courses', '/website-info'];
+      const authAdminData: {
+        token: any;
+        admin_user: any;
+        website_info: any;
+      } | null = getAuthAdminData();
 
-      // If the route is not public, attach the Authorization header
+      const authUserData: {
+        token: any;
+        user: any;
+        website_info: any;
+      } | null = getAuthUserData();
 
       if (authUserData && authUserData.token) {
         config.headers['Authorization'] = `Bearer ${authUserData.token}`;
@@ -30,8 +34,8 @@ const setupInterceptors = () => {
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-      // const authAdminData = getAuthAdminData();
-      // const authUserData = getAuthUserData();
+      const authAdminData = getAuthAdminData();
+      const authUserData = getAuthUserData();
 
       // Remove cookies if they exist
       if (authUserData) Cookies.remove('auth_user_data');
