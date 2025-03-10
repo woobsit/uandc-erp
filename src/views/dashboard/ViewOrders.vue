@@ -14,6 +14,7 @@
               sticky
               :scroll="{ x: 1500, y: 240 }"
               @resizeColumn="handleResizeColumn"
+              @change="handleTableChange"
               class="table-list"
               size="small"
               :pagination="pagination"
@@ -27,93 +28,56 @@
                 </template>
                 <template v-else>
                   <template v-if="noRecord">
-                    <a-typography-text> No records</a-typography-text>
+                    <a-typography-text>No records</a-typography-text>
                   </template>
                   <template v-else>
-                    <template v-if="column.key === 'name'">
-                      <a>
-                        {{ record.name }}
-                      </a>
+                    <template v-if="column.key === 'fullname'">
+                      <a>{{ record.fullname }}</a>
                     </template>
-                    <template v-if="column.key === 'phone'">
-                      <a>
-                        {{ record.phone }}
-                      </a>
+                    <template v-if="column.key === 'customer_phone'">
+                      <a>{{ record.customer_phone }}</a>
                     </template>
                     <template v-if="column.key === 'pickup_time'">
-                      <a>
-                        {{ record.pickup_time }}
-                      </a>
+                      <a>{{ record.pickup_time }}</a>
                     </template>
                     <template v-if="column.key === 'pickup_address'">
-                      <a>
-                        {{ record.pickup_address }}
-                      </a>
+                      <a>{{ record.pickup_address }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_address'">
-                      <a>
-                        {{ record.delivery_address }}
-                      </a>
+                      <a>{{ record.delivery_address }}</a>
                     </template>
-                    <template v-if="column.key === 'type'">
-                      <a>
-                        {{ record.type }}
-                      </a>
+                    <template v-if="column.key === 'delivery_type'">
+                      <a>{{ record.delivery_type }}</a>
                     </template>
                     <template v-if="column.key === 'status'">
-                      <a>
-                        {{ record.status }}
-                      </a>
+                      <a>{{ record.status }}</a>
                     </template>
                     <template v-if="column.key === 'payment_status'">
-                      <a>
-                        {{ record.payment_status }}
-                      </a>
+                      <a>{{ record.payment_status }}</a>
                     </template>
-                    <template v-if="column.key === 'cost'">
-                      <a>
-                        {{ record.cost }}
-                      </a>
+                    <template v-if="column.key === 'total_cost'">
+                      <a>{{ record.total_cost }}</a>
                     </template>
                     <template v-if="column.key === 'discount'">
-                      <a>
-                        {{ record.discount }}
-                      </a>
+                      <a>{{ record.discount }}</a>
                     </template>
-                    <template v-if="column.key === 'slot'">
-                      <a>
-                        {{ record.slot }}
-                      </a>
+                    <template v-if="column.key === 'delivery_time_slot'">
+                      <a>{{ record.delivery_time_slot }}</a>
                     </template>
                     <template v-if="column.key === 'distance'">
-                      <a>
-                        {{ record.distance }}
-                      </a>
+                      <a>{{ record.distance }}</a>
                     </template>
-                    <template v-if="column.key === 'discount'">
-                      <a>
-                        {{ record.discount }}
-                      </a>
+                    <template v-if="column.key === 'estimated_delivery_time'">
+                      <a>{{ record.estimated_delivery_time }}</a>
                     </template>
-                    <template v-if="column.key === 'estimated_time'">
-                      <a>
-                        {{ record.estimated_time }}
-                      </a>
+                    <template v-if="column.key === 'actual_delivery_time'">
+                      <a>{{ record.actual_delivery_time }}</a>
                     </template>
-                    <template v-if="column.key === 'actual_time'">
-                      <a>
-                        {{ record.actual_time }}
-                      </a>
-                    </template>
-                    <template v-if="column.key === 'date'">
-                      <a>
-                        {{ record.date }}
-                      </a>
+                    <template v-if="column.key === 'created_at'">
+                      <a>{{ record.created_at }}</a>
                     </template>
                     <template v-if="column.key === 'action'">
-                      <a>
-                        {{ record.action }}
-                      </a>
+                      <a>{{ record.action }}</a>
                     </template>
                   </template>
                 </template>
@@ -127,8 +91,9 @@
     </a-layout>
   </div>
 </template>
+
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted } from 'vue';
 import SideBar from '@/components/template/SidebarTemplate.vue';
 import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
@@ -138,33 +103,36 @@ import { notify } from '@/utils/notification';
 
 interface Column {
   width?: number;
-  // ... you can add more properties if needed
+  // Additional column properties as needed
 }
 
-// Define a function with explicit types for rowClassName
+// Function for striped rows
 const rowClassName = (_record: any, index: number): string | null => {
   return index % 2 === 1 ? 'table-striped' : null;
 };
 
-// Define a function with explicit types for handleResizeColumn
+// Function to handle column resize
 function handleResizeColumn(w: number, col: Column): void {
   col.width = w;
 }
 
+// Define table columns (make sure keys match your backend data structure)
 const columns = ref<TableColumnsType>([
   {
     title: 'Customer name',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'fullname',
+    key: 'fullname',
     ellipsis: true,
     width: 150,
+    resizable: true,
   },
   {
     title: 'Phone number',
-    key: 'phone',
-    dataIndex: 'phone',
+    key: 'customer_phone',
+    dataIndex: 'customer_phone',
     ellipsis: true,
     width: 130,
+    resizable: true,
   },
   {
     title: 'Pickup time',
@@ -172,14 +140,15 @@ const columns = ref<TableColumnsType>([
     key: 'pickup_time',
     ellipsis: true,
     width: 110,
+    resizable: true,
   },
   {
     title: 'Pickup address',
     dataIndex: 'pickup_address',
     key: 'pickup_address',
     ellipsis: true,
-    resizable: true,
     width: 200,
+    resizable: true,
   },
   {
     title: 'Delivery address',
@@ -187,13 +156,14 @@ const columns = ref<TableColumnsType>([
     dataIndex: 'delivery_address',
     ellipsis: true,
     width: 200,
+    resizable: true,
   },
   {
     title: 'Delivery type',
-    key: 'type',
-    dataIndex: 'type',
+    key: 'delivery_type',
+    dataIndex: 'delivery_type',
     ellipsis: true,
-    width: 130,
+    width: 120,
   },
   {
     title: 'Status',
@@ -207,14 +177,15 @@ const columns = ref<TableColumnsType>([
     key: 'payment_status',
     dataIndex: 'payment_status',
     ellipsis: true,
-    width: 150,
+    width: 140,
   },
   {
     title: 'Total cost',
-    key: 'cost',
-    dataIndex: 'cost',
+    key: 'total_cost',
+    dataIndex: 'total_cost',
     ellipsis: true,
     width: 100,
+    resizable: true,
   },
   {
     title: 'Discount',
@@ -222,11 +193,12 @@ const columns = ref<TableColumnsType>([
     dataIndex: 'discount',
     ellipsis: true,
     width: 100,
+    resizable: true,
   },
   {
     title: 'Time slot',
-    key: 'slot',
-    dataIndex: 'slot',
+    key: 'delivery_time_slot',
+    dataIndex: 'delivery_time_slot',
     ellipsis: true,
     width: 100,
   },
@@ -239,24 +211,27 @@ const columns = ref<TableColumnsType>([
   },
   {
     title: 'Estimated delivery time',
-    key: 'estimated_time',
-    dataIndex: 'estimated_time',
-    width: 100,
+    key: 'estimated_delivery_time',
+    dataIndex: 'estimated_delivery_time',
     ellipsis: true,
+    width: 100,
+    resizable: true,
   },
   {
     title: 'Actual delivery time',
-    key: 'actual_time',
-    dataIndex: 'actual_time',
-    width: 100,
+    key: 'actual_delivery_time',
+    dataIndex: 'actual_delivery_time',
     ellipsis: true,
+    width: 140,
+    resizable: true,
   },
   {
     title: 'Date',
-    key: 'date',
-    dataIndex: 'date',
+    key: 'created_at',
+    dataIndex: 'created_at',
     ellipsis: true,
     width: 100,
+    resizable: true,
   },
   {
     title: 'Action',
@@ -266,18 +241,51 @@ const columns = ref<TableColumnsType>([
   },
 ]);
 
+// Reactive variables for loading, data, and noRecord
 const loading = ref(true);
-let data = ref<any[]>([]);
+const data = ref<any[]>([]);
 const noRecord = ref(false);
-const fetchOrders = async () => {
+
+// Reactive pagination data
+const pagination = ref({
+  total: 0,
+  current: 1,
+  pageSize: 10,
+});
+
+// Define an interface for API parameters
+interface APIParams {
+  page: number;
+  results: number;
+}
+
+// Fetch orders with pagination parameters
+const fetchOrders = async (params: Partial<APIParams> = {}) => {
   loading.value = true;
   try {
-    // Call the authService's getAllOrders method
-    const response = await authService.getAllOrders();
+    const page = params.page || pagination.value.current;
+    const results = params.results || pagination.value.pageSize;
+
+    const queryParams: APIParams = { page, results };
+
+    // Call getAllOrders with queryParams. Ensure authService.getAllOrders
+    // is updated to accept an object.
+    const response = await authService.getAllOrders(queryParams);
+
     if (response.status === 201) {
-      data = response.result;
-    } else if (response.status === 404 || response.result.length === 0) {
+      data.value = response.result;
+      pagination.value = {
+        total: response.pagination.total,
+        current: response.pagination.current_page,
+        pageSize: response.pagination.per_page,
+      };
+      noRecord.value = data.value.length === 0;
+    } else if (
+      response.status === 404 ||
+      (response.result && response.result.length === 0)
+    ) {
       noRecord.value = true;
+      data.value = [];
     } else if (response.status === 500) {
       notify({
         type: 'error',
@@ -307,12 +315,15 @@ onMounted(() => {
   fetchOrders();
 });
 
-// Optionally, if you need pagination support:
-const pagination = computed(() => ({
-  total: 200,
-  current: 1, // Adjust as needed
-  pageSize: 10, // Adjust as needed
-}));
+// Handle table pagination change event
+const handleTableChange = (paginationInfo: any) => {
+  pagination.value.current = paginationInfo.current;
+  pagination.value.pageSize = paginationInfo.pageSize;
+  fetchOrders({
+    page: paginationInfo.current,
+    results: paginationInfo.pageSize,
+  });
+};
 </script>
 
 <style scoped>

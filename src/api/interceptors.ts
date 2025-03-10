@@ -2,6 +2,7 @@ import axiosInstance from './axiosInstance';
 //js-cookies
 import Cookies from 'js-cookie';
 import { getAuthAdminData, getAuthUserData } from '@/api/handleAuthCookies';
+import { notify } from '@/utils/notification';
 
 const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
@@ -57,7 +58,7 @@ const setupInterceptors = () => {
 
       if (alertMessage) {
         window.location.replace(redirectUrl);
-        alert(alertMessage);
+        notify({ type: 'error', message: 'Error', description: alertMessage });
       }
 
       return Promise.reject(error); // Propagate the error to further catch handling

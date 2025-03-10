@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
             LogisticsTypeSeeder::class,
             AdminTypeSeeder::class,
             AdminSeeder::class,
-            OrderSeeder::class,
             RiderSeeder::class,
+            OrderSeeder::class,
+
         ]);
     }
 }

@@ -17,8 +17,7 @@ class OrderController extends Controller
     public function showOrders()
     {
         try {
-            $order = Order::all()
-                ->orderBy('created_at', 'desc')
+            $order = Order::orderBy('created_at', 'desc')
                 ->paginate(10);
 
             // Check if there are any orders
