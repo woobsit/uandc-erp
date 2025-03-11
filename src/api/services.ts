@@ -10,8 +10,8 @@ const authService = {
   adminLogin: (email: string, password: string, remember_token: boolean) =>
     handleRequest('/admin-login', 'post', { email, password, remember_token }),
   // Updated getAllOrders to accept an object of type APIParams
-  getAllOrders: (params: APIParams) =>
-    handleRequest('/show-orders', 'get', params),
+  getAllOrders: ({ page, results }: APIParams) =>
+    handleRequest(`/show-orders?page=${page}&results=${results}`, 'get'),
 };
 
 export default authService;

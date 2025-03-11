@@ -10,17 +10,42 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Cache;
 
 
 class OrderController extends Controller
 {
-    public function showOrders()
+    public function showOrders(Request $request)
     {
         try {
-            $order = Order::orderBy('created_at', 'desc')
-                ->paginate(10);
+            $results = $request->input('results', 10);
+            $page = $request->input('page', 1); // Get current page
+            $cacheKey = "orders_page_{$page}_results_{$results}";
 
-            // Check if there are any orders
+            // Check if the data is cached
+            $order = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($results) {
+                return Order::select([
+                    'id',
+                    'fullname',
+                    'customer_phone',
+                    'pickup_time',
+                    'pickup_address',
+                    'delivery_address',
+                    'delivery_type',
+                    'status',
+                    'payment_status',
+                    'total_cost',
+                    'discount',
+                    'delivery_time_slot',
+                    'distance',
+                    'estimated_delivery_time',
+                    'actual_delivery_time',
+                    'created_at'
+                ])
+                    ->orderBy('created_at', 'desc')
+                    ->paginate($results);
+            });
+
             if ($order->isEmpty()) {
                 return response()->json([
                     'status' => 404,
@@ -28,7 +53,6 @@ class OrderController extends Controller
                 ]);
             }
 
-            // If orders are found, return the result with pagination data
             return response()->json([
                 'status' => 201,
                 'message' => 'success',

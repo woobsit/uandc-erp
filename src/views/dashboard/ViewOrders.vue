@@ -6,51 +6,61 @@
         <HeaderTemplate />
         <div class="content-container">
           <div class="table-container">
-            <a-table
-              :columns="columns"
-              :data-source="data"
-              :row-class-name="rowClassName"
-              bordered
-              sticky
-              :scroll="{ x: 1500, y: 240 }"
-              @resizeColumn="handleResizeColumn"
-              @change="handleTableChange"
-              class="table-list"
-              size="small"
-              :pagination="pagination"
-            >
-              <template #bodyCell="{ column, record }">
-                <template v-if="loading">
-                  <a-skeleton active />
-                  <a-skeleton active />
-                  <a-skeleton active />
-                  <a-skeleton active />
-                </template>
-                <template v-else>
-                  <template v-if="noRecord">
+            <template v-if="initialLoading">
+              <a-space class="spinner-container">
+                <a-spin size="large" />
+              </a-space>
+            </template>
+            <template v-else>
+              <a-table
+                :columns="columns"
+                :data-source="data"
+                :row-class-name="rowClassName"
+                bordered
+                sticky
+                :scroll="{ x: 1500, y: 500 }"
+                @resizeColumn="handleResizeColumn"
+                @change="handleTableChange"
+                class="table-list"
+                size="small"
+                :pagination="pagination"
+              >
+                <template #bodyCell="{ column, record }">
+                  <template v-if="loading">
+                    <a-skeleton active />
+                  </template>
+                  <template v-else-if="noRecord">
                     <a-typography-text>No records</a-typography-text>
                   </template>
                   <template v-else>
                     <template v-if="column.key === 'fullname'">
-                      <a>{{ record.fullname }}</a>
+                      <a :title="record.fullname">{{ record.fullname }}</a>
                     </template>
                     <template v-if="column.key === 'customer_phone'">
-                      <a>{{ record.customer_phone }}</a>
+                      <a :title="record.customer_phone">{{
+                        record.customer_phone
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'pickup_time'">
-                      <a>{{ record.pickup_time }}</a>
+                      <a :title="record.pickup_time">{{
+                        record.pickup_time
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'pickup_address'">
-                      <a>{{ record.pickup_address }}</a>
+                      <a :title="record.pickup_address">{{
+                        record.pickup_address
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_address'">
-                      <a>{{ record.delivery_address }}</a>
+                      <a :title="record.delivery_address">{{
+                        record.delivery_address
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_type'">
                       <a>{{ record.delivery_type }}</a>
                     </template>
                     <template v-if="column.key === 'status'">
-                      <a>{{ record.status }}</a>
+                      <a :title="record.delivery_type">{{ record.status }}</a>
                     </template>
                     <template v-if="column.key === 'payment_status'">
                       <a>{{ record.payment_status }}</a>
@@ -62,28 +72,33 @@
                       <a>{{ record.discount }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_time_slot'">
-                      <a>{{ record.delivery_time_slot }}</a>
+                      <a :title="record.delivery_time_slot">{{
+                        record.delivery_time_slot
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'distance'">
                       <a>{{ record.distance }}</a>
                     </template>
                     <template v-if="column.key === 'estimated_delivery_time'">
-                      <a>{{ record.estimated_delivery_time }}</a>
+                      <a :title="record.estimated_delivery_time">{{
+                        record.estimated_delivery_time
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'actual_delivery_time'">
-                      <a>{{ record.actual_delivery_time }}</a>
+                      <a :title="record.actual_delivery_time">{{
+                        record.actual_delivery_time
+                      }}</a>
                     </template>
                     <template v-if="column.key === 'created_at'">
-                      <a>{{ record.created_at }}</a>
+                      <a :title="record.created_at">{{ record.created_at }}</a>
                     </template>
                     <template v-if="column.key === 'action'">
                       <a>{{ record.action }}</a>
                     </template>
                   </template>
                 </template>
-              </template>
-            </a-table>
-            <div class="order-chart">chart</div>
+              </a-table>
+            </template>
           </div>
         </div>
         <FooterTemplate />
@@ -99,12 +114,7 @@ import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
 import authService from '@/api/services';
-import { notify } from '@/utils/notification';
-
-interface Column {
-  width?: number;
-  // Additional column properties as needed
-}
+import type { Order } from '@/types';
 
 // Function for striped rows
 const rowClassName = (_record: any, index: number): string | null => {
@@ -112,11 +122,11 @@ const rowClassName = (_record: any, index: number): string | null => {
 };
 
 // Function to handle column resize
-function handleResizeColumn(w: number, col: Column): void {
+const handleResizeColumn = (w: number, col: { width?: number }) => {
   col.width = w;
-}
+};
 
-// Define table columns (make sure keys match your backend data structure)
+// Define table columns
 const columns = ref<TableColumnsType>([
   {
     title: 'Customer name',
@@ -125,6 +135,7 @@ const columns = ref<TableColumnsType>([
     ellipsis: true,
     width: 150,
     resizable: true,
+    fixed: true,
   },
   {
     title: 'Phone number',
@@ -179,154 +190,68 @@ const columns = ref<TableColumnsType>([
     ellipsis: true,
     width: 140,
   },
-  {
-    title: 'Total cost',
-    key: 'total_cost',
-    dataIndex: 'total_cost',
-    ellipsis: true,
-    width: 100,
-    resizable: true,
-  },
-  {
-    title: 'Discount',
-    key: 'discount',
-    dataIndex: 'discount',
-    ellipsis: true,
-    width: 100,
-    resizable: true,
-  },
-  {
-    title: 'Time slot',
-    key: 'delivery_time_slot',
-    dataIndex: 'delivery_time_slot',
-    ellipsis: true,
-    width: 100,
-  },
-  {
-    title: 'Distance',
-    key: 'distance',
-    dataIndex: 'distance',
-    ellipsis: true,
-    width: 100,
-  },
-  {
-    title: 'Estimated delivery time',
-    key: 'estimated_delivery_time',
-    dataIndex: 'estimated_delivery_time',
-    ellipsis: true,
-    width: 100,
-    resizable: true,
-  },
-  {
-    title: 'Actual delivery time',
-    key: 'actual_delivery_time',
-    dataIndex: 'actual_delivery_time',
-    ellipsis: true,
-    width: 140,
-    resizable: true,
-  },
-  {
-    title: 'Date',
-    key: 'created_at',
-    dataIndex: 'created_at',
-    ellipsis: true,
-    width: 100,
-    resizable: true,
-  },
-  {
-    title: 'Action',
-    key: 'action',
-    ellipsis: true,
-    width: 100,
-  },
 ]);
 
-// Reactive variables for loading, data, and noRecord
-const loading = ref(true);
-const data = ref<any[]>([]);
+// Loading and data states
+const initialLoading = ref(true); // First load spinner
+const loading = ref(false); // Pagination skeletons
+const data = ref<Order[]>([]);
 const noRecord = ref(false);
 
-// Reactive pagination data
 const pagination = ref({
   total: 0,
   current: 1,
   pageSize: 10,
 });
 
-// Define an interface for API parameters
-interface APIParams {
-  page: number;
-  results: number;
-}
+// Fetch orders
+const fetchOrders = async () => {
+  loading.value = pagination.value.current > 1; // Show skeletons on pagination change
+  initialLoading.value = pagination.value.current === 1; // Show spinner only on first load
+  noRecord.value = false;
 
-// Fetch orders with pagination parameters
-const fetchOrders = async (params: Partial<APIParams> = {}) => {
-  loading.value = true;
   try {
-    const page = params.page || pagination.value.current;
-    const results = params.results || pagination.value.pageSize;
+    const response = await authService.getAllOrders({
+      page: pagination.value.current,
+      results: pagination.value.pageSize,
+    });
 
-    const queryParams: APIParams = { page, results };
-
-    // Call getAllOrders with queryParams. Ensure authService.getAllOrders
-    // is updated to accept an object.
-    const response = await authService.getAllOrders(queryParams);
-
-    if (response.status === 201) {
-      data.value = response.result;
-      pagination.value = {
-        total: response.pagination.total,
-        current: response.pagination.current_page,
-        pageSize: response.pagination.per_page,
-      };
+    if (response && response.status === 201 && response.result) {
+      data.value = response.result || [];
+      pagination.value.total = response.pagination?.total || 0;
       noRecord.value = data.value.length === 0;
-    } else if (
-      response.status === 404 ||
-      (response.result && response.result.length === 0)
-    ) {
-      noRecord.value = true;
-      data.value = [];
-    } else if (response.status === 500) {
-      notify({
-        type: 'error',
-        message: 'System Error',
-        description: response.message,
-      });
     } else {
-      notify({
-        type: 'error',
-        message: 'Error',
-        description: 'An unexpected error occurred',
-      });
+      noRecord.value = true;
     }
   } catch (error) {
-    notify({
-      type: 'error',
-      message: 'Error',
-      description: 'An unexpected error occurred. Please try again.',
-    });
+    noRecord.value = true;
   } finally {
     loading.value = false;
+    initialLoading.value = false;
   }
 };
 
-// Trigger fetchOrders on component mount
+// Fetch data on mount
 onMounted(() => {
   fetchOrders();
 });
 
-// Handle table pagination change event
+// Handle pagination change
 const handleTableChange = (paginationInfo: any) => {
   pagination.value.current = paginationInfo.current;
   pagination.value.pageSize = paginationInfo.pageSize;
-  fetchOrders({
-    page: paginationInfo.current,
-    results: paginationInfo.pageSize,
-  });
+  fetchOrders();
 };
 </script>
 
 <style scoped>
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 300px;
+}
 [data-doc-theme='light'] .ant-table-striped :deep(.table-striped) td {
   background-color: #fafafa;
 }
