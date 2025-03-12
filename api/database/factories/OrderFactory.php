@@ -24,7 +24,7 @@ class OrderFactory extends Factory
             'status'                  => $this->faker->randomElement(['Pending', 'Processing', 'Completed', 'Cancelled']),
             'customer_phone'          => $this->faker->phoneNumber,
             'customer_email'          => $this->faker->safeEmail,
-            'delivery_type'           => 'Standard', // default value
+            'delivery_type'           => $this->faker->randomElement(['Standard', 'Express', 'Same Day', 'Overnight']),
             'delivery_time_slot'      => $this->faker->time('H:i:s'),
             'distance'                => $this->faker->randomFloat(2, 1, 100),
             'estimated_delivery_time' => $this->faker->dateTime,
@@ -33,8 +33,8 @@ class OrderFactory extends Factory
             'package_dimensions'      => $this->faker->word,
             'is_fragile'              => $this->faker->boolean,
             'special_instructions'    => $this->faker->sentence,
-            'payment_status'          => 'Unpaid', // default value
-            'payment_method'          => $this->faker->randomElement(['Credit Card', 'Cash', 'PayPal']),
+            'payment_status'          => $this->faker->randomElement(['paid', 'unpaid', 'refunded', 'failed']),
+            'payment_method'          => $this->faker->randomElement(['Credit Card', 'Cash']),
             'total_cost'              => $this->faker->randomFloat(2, 10, 500),
             'discount'                => $this->faker->randomFloat(2, 0, 50),
             // Set rider_id to null by default. If you have riders seeded, you can assign a random rider id.

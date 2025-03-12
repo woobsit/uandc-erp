@@ -5,9 +5,10 @@
       <a-layout>
         <HeaderTemplate />
         <div class="content-container">
+          <a-typography-title :level="3">View Orders</a-typography-title>
           <div class="table-container">
             <template v-if="initialLoading">
-              <a-space class="spinner-container">
+              <a-space class="table__spinner-container">
                 <a-spin size="large" />
               </a-space>
             </template>
@@ -27,7 +28,13 @@
               >
                 <template #bodyCell="{ column, record }">
                   <template v-if="loading">
-                    <a-skeleton active />
+                    <a-skeleton
+                      :paragraph="{ rows: 1, width: '60%' }"
+                      active
+                      size="large"
+                      :title="false"
+                      class="custom-skeleton"
+                    />
                   </template>
                   <template v-else-if="noRecord">
                     <a-typography-text>No records</a-typography-text>
@@ -57,13 +64,28 @@
                       }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_type'">
-                      <a>{{ record.delivery_type }}</a>
+                      <a
+                        :class="
+                          getStatusClass(record.delivery_type, 'delivery')
+                        "
+                        >{{ record.delivery_type }}</a
+                      >
                     </template>
                     <template v-if="column.key === 'status'">
-                      <a :title="record.delivery_type">{{ record.status }}</a>
+                      <a
+                        :title="record.delivery_type"
+                        :class="getStatusClass(record.status, 'order')"
+                      >
+                        {{ record.status }}
+                      </a>
                     </template>
                     <template v-if="column.key === 'payment_status'">
-                      <a>{{ record.payment_status }}</a>
+                      <a
+                        :class="
+                          getStatusClass(record.payment_status, 'payment')
+                        "
+                        >{{ record.payment_status }}</a
+                      >
                     </template>
                     <template v-if="column.key === 'total_cost'">
                       <a>{{ record.total_cost }}</a>
@@ -93,7 +115,19 @@
                       <a :title="record.created_at">{{ record.created_at }}</a>
                     </template>
                     <template v-if="column.key === 'action'">
-                      <a>{{ record.action }}</a>
+                      <a-space wrap>
+                        <a-button type="primary" size="small"
+                          >More info</a-button
+                        >
+                        <a-button size="small" class="warning-btn"
+                          >Edit</a-button
+                        >
+                        <a-dropdown>
+                          <a-menu @click="handleMenuClick">
+                            <a-menu-item key="1">Delete</a-menu-item>
+                          </a-menu>
+                        </a-dropdown>
+                      </a-space>
                     </template>
                   </template>
                 </template>
@@ -115,6 +149,8 @@ import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
 import authService from '@/api/services';
 import type { Order } from '@/types';
+import { DownOutlined } from '@ant-design/icons-vue';
+import type { MenuProps } from 'ant-design-vue';
 
 // Function for striped rows
 const rowClassName = (_record: any, index: number): string | null => {
@@ -190,6 +226,66 @@ const columns = ref<TableColumnsType>([
     ellipsis: true,
     width: 140,
   },
+  {
+    title: 'Total cost',
+    key: 'total_cost',
+    dataIndex: 'total_cost',
+    ellipsis: true,
+    width: 100,
+    resizable: true,
+  },
+  {
+    title: 'Discount',
+    key: 'discount',
+    dataIndex: 'discount',
+    ellipsis: true,
+    width: 100,
+    resizable: true,
+  },
+  {
+    title: 'Time slot',
+    key: 'delivery_time_slot',
+    dataIndex: 'delivery_time_slot',
+    ellipsis: true,
+    width: 100,
+  },
+  {
+    title: 'Distance',
+    key: 'distance',
+    dataIndex: 'distance',
+    ellipsis: true,
+    width: 100,
+  },
+  {
+    title: 'Estimated delivery time',
+    key: 'estimated_delivery_time',
+    dataIndex: 'estimated_delivery_time',
+    ellipsis: true,
+    width: 100,
+    resizable: true,
+  },
+  {
+    title: 'Actual delivery time',
+    key: 'actual_delivery_time',
+    dataIndex: 'actual_delivery_time',
+    ellipsis: true,
+    width: 140,
+    resizable: true,
+  },
+  {
+    title: 'Date',
+    key: 'created_at',
+    dataIndex: 'created_at',
+    ellipsis: true,
+    width: 100,
+    resizable: true,
+  },
+  {
+    title: 'Action',
+    key: 'action',
+    ellipsis: true,
+    width: 300,
+  },
 ]);
 
 // Loading and data states
@@ -242,6 +338,63 @@ const handleTableChange = (paginationInfo: any) => {
   pagination.value.pageSize = paginationInfo.pageSize;
   fetchOrders();
 };
+
+//status, payment and delivery type color changes
+const getStatusClass = (
+  status: string,
+  type: 'order' | 'payment' | 'delivery'
+) => {
+  const lowerStatus = status.toLowerCase();
+
+  if (type === 'order') {
+    switch (lowerStatus) {
+      case 'cancelled':
+        return 'table__status-cancelled';
+      case 'completed':
+        return 'table__status-completed';
+      case 'processing':
+        return 'table__status-processing';
+      case 'pending':
+        return 'table__status-pending';
+      default:
+        return '';
+    }
+  }
+
+  if (type === 'payment') {
+    switch (lowerStatus) {
+      case 'paid':
+        return 'table__payment-paid';
+      case 'unpaid':
+        return 'table__payment-unpaid';
+      case 'refunded':
+        return 'table__payment-refunded';
+      case 'failed':
+        return 'table__payment-failed';
+      default:
+        return '';
+    }
+  }
+
+  if (type === 'delivery') {
+    switch (lowerStatus) {
+      case 'standard':
+        return 'table__delivery-standard';
+      case 'express':
+        return 'table__delivery-express';
+      case 'same day':
+        return 'table__delivery-same-day';
+      case 'overnight':
+        return 'table__delivery-overnight';
+      default:
+        return '';
+    }
+  }
+  return ''; // Default case
+};
+const handleMenuClick: MenuProps['onClick'] = (e) => {
+  console.log('click', e);
+};
 </script>
 
 <style scoped>
@@ -257,5 +410,9 @@ const handleTableChange = (paginationInfo: any) => {
 }
 [data-doc-theme='dark'] .ant-table-striped :deep(.table-striped) td {
   background-color: rgb(29, 29, 29);
+}
+
+:deep(.ant-skeleton-paragraph > li) {
+  height: 7px !important; /* Adjust thickness */
 }
 </style>
