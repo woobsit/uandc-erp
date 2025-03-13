@@ -64,27 +64,26 @@
                       }}</a>
                     </template>
                     <template v-if="column.key === 'delivery_type'">
-                      <a
-                        :class="
+                      <a-tag
+                        :color="
                           getStatusClass(record.delivery_type, 'delivery')
                         "
-                        >{{ record.delivery_type }}</a
+                        >{{ record.delivery_type }}</a-tag
                       >
                     </template>
                     <template v-if="column.key === 'status'">
-                      <a
-                        :title="record.delivery_type"
-                        :class="getStatusClass(record.status, 'order')"
+                      <a-tag
+                        :title="record.status"
+                        :color="getStatusClass(record.status, 'order')"
+                        >{{ record.status }}</a-tag
                       >
-                        {{ record.status }}
-                      </a>
                     </template>
                     <template v-if="column.key === 'payment_status'">
-                      <a
-                        :class="
+                      <a-tag
+                        :color="
                           getStatusClass(record.payment_status, 'payment')
                         "
-                        >{{ record.payment_status }}</a
+                        >{{ record.payment_status }}</a-tag
                       >
                     </template>
                     <template v-if="column.key === 'total_cost'">
@@ -115,18 +114,23 @@
                       <a :title="record.created_at">{{ record.created_at }}</a>
                     </template>
                     <template v-if="column.key === 'action'">
-                      <a-space wrap>
-                        <a-button type="primary" size="small"
-                          >More info</a-button
+                      <a-space :size="[10, 'small']" wrap>
+                        <router-link :to="`/view/${record.id}`">
+                          <eye-filled class="table__eye-icon" />
+                        </router-link>
+                        <!-- Edit Icon -->
+                        <router-link :to="`/edit/${record.id}`">
+                          <edit-filled class="table__edit-icon" />
+                        </router-link>
+                        <!-- Delete with Confirmation -->
+                        <a-popconfirm
+                          title="Are you sure you want to delete this item?"
+                          ok-text="Yes"
+                          cancel-text="No"
+                          @confirm="() => handleDelete(record.id)"
                         >
-                        <a-button size="small" class="warning-btn"
-                          >Edit</a-button
-                        >
-                        <a-dropdown>
-                          <a-menu @click="handleMenuClick">
-                            <a-menu-item key="1">Delete</a-menu-item>
-                          </a-menu>
-                        </a-dropdown>
+                          <delete-filled class="table__delete-icon" />
+                        </a-popconfirm>
                       </a-space>
                     </template>
                   </template>
@@ -149,8 +153,7 @@ import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
 import authService from '@/api/services';
 import type { Order } from '@/types';
-import { DownOutlined } from '@ant-design/icons-vue';
-import type { MenuProps } from 'ant-design-vue';
+import { EditFilled, EyeFilled, DeleteFilled } from '@ant-design/icons-vue';
 
 // Function for striped rows
 const rowClassName = (_record: any, index: number): string | null => {
@@ -281,10 +284,10 @@ const columns = ref<TableColumnsType>([
     resizable: true,
   },
   {
-    title: 'Action',
+    title: '',
     key: 'action',
     ellipsis: true,
-    width: 300,
+    width: 100,
   },
 ]);
 
@@ -349,13 +352,13 @@ const getStatusClass = (
   if (type === 'order') {
     switch (lowerStatus) {
       case 'cancelled':
-        return 'table__status-cancelled';
+        return 'red';
       case 'completed':
-        return 'table__status-completed';
+        return 'green';
       case 'processing':
-        return 'table__status-processing';
+        return 'orange';
       case 'pending':
-        return 'table__status-pending';
+        return '';
       default:
         return '';
     }
@@ -364,13 +367,13 @@ const getStatusClass = (
   if (type === 'payment') {
     switch (lowerStatus) {
       case 'paid':
-        return 'table__payment-paid';
+        return 'green';
       case 'unpaid':
-        return 'table__payment-unpaid';
+        return 'red';
       case 'refunded':
-        return 'table__payment-refunded';
+        return 'purple';
       case 'failed':
-        return 'table__payment-failed';
+        return 'volcano';
       default:
         return '';
     }
@@ -379,21 +382,23 @@ const getStatusClass = (
   if (type === 'delivery') {
     switch (lowerStatus) {
       case 'standard':
-        return 'table__delivery-standard';
+        return 'blue';
       case 'express':
-        return 'table__delivery-express';
+        return 'red';
       case 'same day':
-        return 'table__delivery-same-day';
+        return 'green';
       case 'overnight':
-        return 'table__delivery-overnight';
+        return 'purple';
       default:
         return '';
     }
   }
   return ''; // Default case
 };
-const handleMenuClick: MenuProps['onClick'] = (e) => {
-  console.log('click', e);
+
+const handleDelete = (id: number) => {
+  console.log(`Deleting item with ID: ${id}`);
+  // Add API call to delete the item here
 };
 </script>
 

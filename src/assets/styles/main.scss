@@ -156,6 +156,14 @@
   padding: 5px 10px;
 }
 
+.table__spinner-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  min-height: 100vh; /* Takes full viewport height */
+  width: 100%; /* Takes full width */
+}
+
 @media (min-width: 768px) {
   .content-container {
     padding: 10px 10px;
@@ -169,51 +177,43 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+  height:500px;
+ 
 }
-
-.table__spinner-container{
-  
-}
-
-.table__status-cancelled {
-  color: red;
-}
-
-.table__status-completed {
-  color: green;
-}
-
-.table__status-processing {
-  color: orange;
-}
-
-.table__status-pending {
-  color: gray;
-}
-
-.table__payment-paid { color: green; }
-.table__payment-unpaid { color: red; }
-.table__payment-refunded { color: purple; }
-.table__payment-failed { color: darkred; }
-
-.table__delivery-standard { color: gray; }
-.table__delivery-express { color: blue; }
-.table__delivery-same-day { color: green; }
-.table__delivery-overnight { color: purple; }
 
 .table-striped {
   background-color: #f9f9f9 !important; /* Light gray for striping */
 }
 
-.warning-btn {
-  background-color: #faad14;
-  border-color: #faad14;
-  color: white;
+.table__eye-icon{
+  color:rgb(88, 221, 110);
+  cursor:pointer;
+  
 }
-.warning-btn:hover {
-  background-color: #d48806;
-  border-color: #d48806;
+
+.table__eye-icon:hover{
+  color:rgb(0, 243, 41);
 }
+
+.table__edit-icon{
+  cursor:pointer;
+  color:rgb(90, 87, 255);
+}
+
+.table__edit-icon:hover{
+  color:rgb(4, 0, 250);
+}
+
+.table__delete-icon{
+  cursor:pointer;
+  color:rgb(250, 60, 60);
+}
+
+.table__delete-icon:hover{
+  color:rgb(255, 0, 0);
+}
+
+
 
 @media (min-width: 768px) {
   .table-container {
