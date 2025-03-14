@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+    <!-- Overlay Spinner -->
+    <div v-if="loading" class="overlay">
+      <a-spin size="large" />
+    </div>
+
     <form
       class="form components-input-demo-presuffix"
       @submit.prevent="handleSubmit"
@@ -14,6 +19,7 @@
           v-model:value="email"
           @keyup="validateEmailOnKeyup"
           name="email"
+          :disabled="loading"
         >
           <template #prefix>
             <user-outlined />
@@ -32,6 +38,7 @@
           v-model:value="password"
           @blur="validatePasswordOnBlur"
           name="password"
+          :disabled="loading"
         >
           <template #prefix>
             <lock-outlined />
@@ -47,16 +54,18 @@
       <div class="form__remember-me-div">
         <div class="form__checkbox-div">
           <a-form-item>
-            <a-checkbox v-model:checked="remember_me">Remember me</a-checkbox>
+            <a-checkbox v-model:checked="remember_me" :disabled="loading">
+              Remember me
+            </a-checkbox>
           </a-form-item>
         </div>
-        <router-link to="" class="form__forget-password-text"
-          >Forget password?</router-link
-        >
+        <router-link to="" class="form__forget-password-text">
+          Forget password?
+        </router-link>
       </div>
 
       <button type="submit" :disabled="loading" class="form__button">
-        {{ loading ? 'Logging in...' : 'Login' }}
+        Login
       </button>
     </form>
   </div>
