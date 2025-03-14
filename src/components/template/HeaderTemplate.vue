@@ -9,7 +9,10 @@
       </a-breadcrumb>
       <div class="demo-dropdown-wrap">
         <a-dropdown-button :trigger="['click']">
-          Profile
+          <template v-if="loading">
+            <a-spin />
+          </template>
+          <template v-else> Profile </template>
           <template #overlay>
             <a-menu @click="handleMenuClick">
               <a-menu-item key="1">
@@ -28,7 +31,6 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { UserOutlined } from '@ant-design/icons-vue';
-import type { MenuProps } from 'ant-design-vue';
 import { useRouter } from 'vue-router';
 import authService from '@/api/services';
 import { notify } from '@/utils/notification';
@@ -37,12 +39,12 @@ import Cookies from 'js-cookie';
 export default {
   components: { UserOutlined },
   setup() {
-    const loading = ref(false);
-    // Vue Router instance for navigation
+    const loading = ref(false); // Spinner state
     const router = useRouter();
 
     async function handleMenuClick() {
-      loading.value = true;
+      loading.value = true; // Show spinner
+
       try {
         const response = await authService.adminLogout();
 
@@ -68,10 +70,12 @@ export default {
           message: 'Error',
           description: 'An unexpected error occurred. Please try again.',
         });
+      } finally {
+        loading.value = false; // Hide spinner after logout attempt
       }
     }
 
-    return { handleMenuClick };
+    return { handleMenuClick, loading };
   },
 };
 </script>

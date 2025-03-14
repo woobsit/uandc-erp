@@ -42,7 +42,6 @@ const routes = [
         name: 'History',
         component: OrdersHistory,
       },
-
     ],
   },
   {

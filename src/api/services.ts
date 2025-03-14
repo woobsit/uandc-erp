@@ -15,7 +15,6 @@ const authService = {
   // Updated getAllOrders to accept an object of type APIParams
   getAllOrders: ({ page, results }: APIParams) =>
     handleRequest(`/show-orders?page=${page}&results=${results}`, 'get'),
-
 };
 
 export default authService;
