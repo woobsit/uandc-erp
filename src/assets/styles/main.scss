@@ -2,6 +2,22 @@
 @import 'mixins';
 @import 'globals';
 
+/*#####################
+##Dashboard container##
+#######################*/
+
+.dashboard-container {
+  width: 100%;
+  height: 100vh;
+}
+
+@media (min-width: 1920px) {
+  .dashboard-container {
+    width: 1920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
 /*############
 ##Login page##
 ##############*/
@@ -52,9 +68,9 @@
 .form__input {
 }
 
-.form__typography--danger{
-  display:block;
- height:18px;
+.form__typography--danger {
+  display: block;
+  height: 18px;
 }
 
 .form__button {
@@ -108,6 +124,25 @@
   margin: 0 auto 30px auto;
 }
 
+/* Overlay Styling */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Dark semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensures it is on top */
+}
+
+/* Disable pointer events when loading */
+.container {
+  position: relative;
+}
+
 @media (min-width: 768px) {
   .form {
     margin-left: auto;
@@ -117,6 +152,7 @@
 }
 
 /*Ant vue ui style overide*/
+
 .form__remember-me-div :where(.css-dev-only-do-not-override-1p3hq3p).ant-form-item {
  margin-bottom: 0;
 }
@@ -131,4 +167,91 @@
   align-items: center;
   padding-left: 20px;
   padding-right: 20px;
+
+.form__remember-me-div
+  :where(.css-dev-only-do-not-override-1p3hq3p).ant-form-item {
+  margin-bottom: 0;
+}
+
+/*############
+##Header bar##
+##############*/
+
+/*############
+##Sidebar##
+##############*/
+.sidebar {
+}
+
+/*###################
+##Content container##
+####################*/
+
+.content-container {
+  padding: 5px 10px;
+}
+
+.table__spinner-container {
+  display: flex;
+  justify-content: center; /* Centers horizontally */
+  align-items: center; /* Centers vertically */
+  min-height: 100vh; /* Takes full viewport height */
+  width: 100%; /* Takes full width */
+}
+
+@media (min-width: 768px) {
+  .content-container {
+    padding: 10px 10px;
+  }
+}
+/*############
+##Order Table##
+##############*/
+
+.table-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  max-height:500px;
+ 
+}
+
+.table-striped {
+  background-color: #f9f9f9 !important; /* Light gray for striping */
+}
+
+.table__eye-icon{
+  color:rgb(88, 221, 110);
+  cursor:pointer;
+  
+}
+
+.table__eye-icon:hover{
+  color:rgb(0, 243, 41);
+}
+
+.table__edit-icon{
+  cursor:pointer;
+  color:rgb(90, 87, 255);
+}
+
+.table__edit-icon:hover{
+  color:rgb(4, 0, 250);
+}
+
+.table__delete-icon{
+  cursor:pointer;
+  color:rgb(250, 60, 60);
+}
+
+.table__delete-icon:hover{
+  color:rgb(255, 0, 0);
+}
+
+@media (min-width: 768px) {
+  .table-container {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
 }

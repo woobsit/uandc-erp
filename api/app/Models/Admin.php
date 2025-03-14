@@ -11,7 +11,7 @@ use Laravel\Passport\HasApiTokens;
 class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-   
+
 
     protected $fillable = [
         'firstname',

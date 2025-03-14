@@ -1,5 +1,10 @@
 <template>
-  <a-layout-sider v-model:collapsed="collapsed" collapsible>
+  <a-layout-sider
+    breakpoint="lg"
+    collapsed-width="0"
+    @collapse="onCollapse"
+    @breakpoint="onBreakpoint"
+  >
     <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
       <a-menu-item key="1">
         <dashboard-outlined />
@@ -54,11 +59,17 @@ export default defineComponent({
     SettingOutlined,
   },
   setup() {
-    const collapsed = ref<boolean>(false);
-    const selectedKeys = ref<string[]>(['1']);
+    const selectedKeys = ref<string[]>(['4']);
+    const onCollapse = (collapsed: boolean, type: string) => {
+      console.log(collapsed, type);
+    };
+
+    const onBreakpoint = (broken: boolean) => {
+      console.log(broken);
+    };
 
     // Return the variables so they can be used in the template
-    return { collapsed, selectedKeys };
+    return { onCollapse, onBreakpoint, selectedKeys };
   },
 });
 </script>

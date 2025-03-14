@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('riders', function (Blueprint $table) {
             // Personal Information
             $table->id();
-            $table->string('full_name');
+            $table->string('fullname');
             $table->string('phone_number')->unique();
             $table->string('email')->unique()->nullable();
             $table->text('address')->nullable();
