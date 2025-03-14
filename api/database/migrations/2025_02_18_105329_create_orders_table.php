@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+
             $table->string('fullname')->index(); // Index for faster search
+
             $table->text('pickup_address', 1000);
             $table->text('delivery_address', 1000);
             $table->text('item_description');

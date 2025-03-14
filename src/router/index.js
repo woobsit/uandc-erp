@@ -8,7 +8,9 @@ import ChangePassword from '@/views/auth/ChangePassword.vue';
 import Dashboard from '@/views/dashboard/DashboardPage.vue';
 import ViewOrders from '@/views/dashboard/ViewOrders.vue';
 import CreateOrders from '@/views/dashboard/CreateOrders.vue';
-//import OrderHistory from '@/views/dashboard/OrderHistory.vue';
+
+import OrdersHistory from '@/views/dashboard/OrdersHistory.vue';
+
 import Cookies from 'js-cookie';
 
 const routes = [
@@ -36,10 +38,10 @@ const routes = [
       },
 
       {
-         path: 'orders-history',
-         name: 'History',
-         component: OrderHistory,
-       },
+        path: 'orders-history',
+        name: 'History',
+        component: OrdersHistory,
+      },
 
     ],
   },
