@@ -177,7 +177,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  height:500px;
+  max-height:500px;
  
 }
 
@@ -212,8 +212,6 @@
 .table__delete-icon:hover{
   color:rgb(255, 0, 0);
 }
-
-
 
 @media (min-width: 768px) {
   .table-container {

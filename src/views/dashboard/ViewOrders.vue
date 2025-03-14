@@ -41,27 +41,33 @@
                   </template>
                   <template v-else>
                     <template v-if="column.key === 'fullname'">
-                      <a :title="record.fullname">{{ record.fullname }}</a>
+                      <router-link
+                        :to="`/view/${record.id}`"
+                        :title="record.fullname"
+                        ><a-typography-text strong>{{
+                          record.fullname
+                        }}</a-typography-text></router-link
+                      >
                     </template>
                     <template v-if="column.key === 'customer_phone'">
-                      <a :title="record.customer_phone">{{
+                      <a-typography-text :title="record.customer_phone">{{
                         record.customer_phone
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'pickup_time'">
-                      <a :title="record.pickup_time">{{
+                      <a-typography-text :title="record.pickup_time">{{
                         record.pickup_time
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'pickup_address'">
-                      <a :title="record.pickup_address">{{
+                      <a-typography-text :title="record.pickup_address">{{
                         record.pickup_address
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'delivery_address'">
-                      <a :title="record.delivery_address">{{
+                      <a-typography-text :title="record.delivery_address">{{
                         record.delivery_address
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'delivery_type'">
                       <a-tag
@@ -87,31 +93,40 @@
                       >
                     </template>
                     <template v-if="column.key === 'total_cost'">
-                      <a>{{ record.total_cost }}</a>
+                      <a-typography-text>{{
+                        record.total_cost
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'discount'">
-                      <a>{{ record.discount }}</a>
+                      <a-typography-text>{{
+                        record.discount
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'delivery_time_slot'">
-                      <a :title="record.delivery_time_slot">{{
+                      <a-typography-text :title="record.delivery_time_slot">{{
                         record.delivery_time_slot
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'distance'">
-                      <a>{{ record.distance }}</a>
+                      <a-typography-text>{{
+                        record.distance
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'estimated_delivery_time'">
-                      <a :title="record.estimated_delivery_time">{{
-                        record.estimated_delivery_time
-                      }}</a>
+                      <a-typography-text
+                        :title="record.estimated_delivery_time"
+                        >{{ record.estimated_delivery_time }}</a-typography-text
+                      >
                     </template>
                     <template v-if="column.key === 'actual_delivery_time'">
-                      <a :title="record.actual_delivery_time">{{
+                      <a-typography-text :title="record.actual_delivery_time">{{
                         record.actual_delivery_time
-                      }}</a>
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'created_at'">
-                      <a :title="record.created_at">{{ record.created_at }}</a>
+                      <a-typography-text :title="record.created_at">{{
+                        record.created_at
+                      }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'action'">
                       <a-space :size="[10, 'small']" wrap>
