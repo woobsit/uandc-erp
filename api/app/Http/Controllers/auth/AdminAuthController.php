@@ -63,6 +63,7 @@ class AdminAuthController extends Controller
                     'photo' => $admin->photo,
                     'phone' => $admin->phone,
                     'admin_type' => $admin->admin_type_id,
+                    'logistics_type' => $admin->logistics_type_id
                 ];
 
                 $websiteInfo = Setting::all();

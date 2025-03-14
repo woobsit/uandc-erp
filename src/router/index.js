@@ -34,11 +34,13 @@ const routes = [
         component: CreateOrders,
         meta: { requiresAuth: true },
       },
-      // {
-      //   path: 'orders-history',
-      //   name: 'History',
-      //   component: OrderHistory,
-      // },
+
+      {
+         path: 'orders-history',
+         name: 'History',
+         component: OrderHistory,
+       },
+
     ],
   },
   {

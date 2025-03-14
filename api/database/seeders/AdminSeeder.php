@@ -28,6 +28,7 @@ class AdminSeeder extends Seeder
                 'photo' => 'storage/assets/images/admins/default.jpg',
                 'address' => 'Ikeja',
                 'admin_type_id' => 1,
+                'logistics_type_id' => 1,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
             ],

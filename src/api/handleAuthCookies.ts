@@ -10,7 +10,7 @@ export function getAuthAdminData() {
     return {
       token: authData.token,
       admin_user: authData.admin_info,
-      website_info: authData.website_info,
+      website_info: authData.settings,
     };
   }
   return null;
@@ -25,7 +25,7 @@ export function getAuthUserData() {
     return {
       token: authData.token,
       user: authData.user_info,
-      website_info: authData.website_info,
+      website_info: authData.settings,
     };
   }
   return null;

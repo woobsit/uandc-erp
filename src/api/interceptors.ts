@@ -2,16 +2,22 @@ import axiosInstance from './axiosInstance';
 //js-cookies
 import Cookies from 'js-cookie';
 import { getAuthAdminData, getAuthUserData } from '@/api/handleAuthCookies';
+import { notify } from '@/utils/notification';
 
 const setupInterceptors = () => {
   axiosInstance.interceptors.request.use(
     (config) => {
-      const authAdminData = getAuthAdminData();
-      const authUserData = getAuthUserData();
-      // List of routes that don't require authentication
-      // const publicRoutes = ['/get-all-courses', '/website-info'];
+      const authAdminData: {
+        token: any;
+        admin_user: any;
+        website_info: any;
+      } | null = getAuthAdminData();
 
-      // If the route is not public, attach the Authorization header
+      const authUserData: {
+        token: any;
+        user: any;
+        website_info: any;
+      } | null = getAuthUserData();
 
       if (authUserData && authUserData.token) {
         config.headers['Authorization'] = `Bearer ${authUserData.token}`;
@@ -52,7 +58,7 @@ const setupInterceptors = () => {
 
       if (alertMessage) {
         window.location.replace(redirectUrl);
-        alert(alertMessage);
+        notify({ type: 'error', message: 'Error', description: alertMessage });
       }
 
       return Promise.reject(error); // Propagate the error to further catch handling
