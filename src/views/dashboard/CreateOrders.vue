@@ -7,60 +7,237 @@
         <div class="content-container">
           <a-typography-title :level="3">Create New Order</a-typography-title>
           <a-form :model="formState" @finish="onFinish">
-            <a-form-item label="Full Name" name="full_name">
-              <a-input v-model:value="formState.fullname" />
-            </a-form-item>
-            <a-form-item label="Pickup Address" name="pickup_address">
-              <a-input
-                v-model:value="formState.pickup_address"
-                id="pickup_address"
-              />
-            </a-form-item>
-            <a-form-item label="Delivery Address" name="delivery_address">
-              <a-input
-                v-model:value="formState.delivery_address"
-                id="delivery_address"
-              />
-            </a-form-item>
-            <a-form-item label="Item Description" name="item_description">
-              <a-input v-model:value="formState.item_description" />
-            </a-form-item>
-            <a-form-item label="Status" name="status">
-              <a-select v-model:value="formState.status">
-                <a-select-option value="Pending">Pending</a-select-option>
-                <a-select-option value="Processing">Processing</a-select-option>
-                <a-select-option value="Completed">Completed</a-select-option>
-                <a-select-option value="Cancelled">Cancelled</a-select-option>
-              </a-select>
-            </a-form-item>
-            <a-form-item label="Customer Phone" name="customer_phone">
-              <a-input v-model:value="formState.customer_phone" />
-            </a-form-item>
-            <a-form-item label="Customer Email" name="customer_email">
-              <a-input v-model:value="formState.customer_email" />
-            </a-form-item>
-            <a-form-item label="Delivery Type" name="delivery_type">
-              <a-input v-model:value="formState.delivery_type" />
-            </a-form-item>
-            <a-form-item label="Total Cost" name="total_cost">
-              <a-input-number v-model:value="formState.total_cost" />
-            </a-form-item>
-            <a-form-item label="Payment Method" name="payment_method">
-              <a-input v-model:value="formState.payment_method" />
-            </a-form-item>
-            <a-form-item label="Rider ID" name="rider_id">
-              <a-input v-model:value="formState.rider_id" />
-            </a-form-item>
-            <a-form-item label="Distance" name="distance">
-              <a-input
-                v-model:value="formState.distance"
-                disabled
-                placeholder="Distance will be calculated automatically"
-              />
-            </a-form-item>
-            <a-form-item>
-              <a-button type="primary" html-type="submit">Submit</a-button>
-            </a-form-item>
+            <div class="order-container">
+              <div class="order-container__upper-box">
+                <a-form-item label="Full Name" name="fullname">
+                  <a-input v-model:value="formState.fullname" />
+                </a-form-item>
+                <a-form-item label="Customer Phone" name="customer_phone">
+                  <a-input v-model:value="formState.customer_phone" />
+                </a-form-item>
+                <a-form-item label="Customer Email" name="customer_email">
+                  <a-input v-model:value="formState.customer_email" />
+                </a-form-item>
+                <a-form-item label="Pickup Address" name="pickup_address">
+                  <a-input
+                    v-model:value="formState.pickup_address"
+                    id="pickup_address"
+                  />
+                </a-form-item>
+                <a-form-item label="Delivery Address" name="delivery_address">
+                  <a-input
+                    v-model:value="formState.delivery_address"
+                    id="delivery_address"
+                  />
+                </a-form-item>
+                <a-form-item name="item_description" label="Item Description">
+                  <a-textarea v-model:value="formState.item_description" />
+                </a-form-item>
+                <a-form-item label="Status" name="status">
+                  <a-select
+                    v-model:value="formState.status"
+                    placeholder="please select your zone"
+                  >
+                    <a-select-option value="Pending">Pending</a-select-option>
+                    <a-select-option value="Processing"
+                      >Processing</a-select-option
+                    >
+                    <a-select-option value="Completed"
+                      >Completed</a-select-option
+                    >
+                    <a-select-option value="Cancelled"
+                      >Cancelled</a-select-option
+                    >
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item label="Delivery Type" name="delivery_type">
+                  <a-select
+                    v-model:value="formState.delivery_type"
+                    placeholder="please select delivery type"
+                  >
+                    <a-select-option value="Standard">Standard</a-select-option>
+                    <a-select-option value="Express">Express</a-select-option>
+                    <a-select-option value="Same Day">Same Day</a-select-option>
+                    <a-select-option value="Overnight"
+                      >Overnight</a-select-option
+                    >
+                  </a-select>
+                </a-form-item>
+                <a-form-item label="Total Cost" name="total_cost">
+                  <a-input-number v-model:value="formState.total_cost" />
+                </a-form-item>
+                <a-form-item label="Discount" name="discount">
+                  <a-input-number v-model:value="formState.discount" />
+                </a-form-item>
+                <a-form-item label="Payment method" name="payment_method">
+                  <a-select
+                    v-model:value="formState.payment_method"
+                    placeholder="Payment method"
+                  >
+                    <a-select-option value="Cash">Cash</a-select-option>
+                    <a-select-option value="Transfer">Transfer</a-select-option>
+                  </a-select>
+                </a-form-item>
+              </div>
+              <div class="order-container__lower-box">
+                <a-typography-title :level="4">Extra Info</a-typography-title>
+                <a-form-item label="Time slot" name="delivery_time_slot">
+                  <a-input v-model:value="formState.delivery_time_slot" />
+                </a-form-item>
+                <a-form-item label="Distance" name="distance">
+                  <a-input
+                    v-model:value="formState.distance"
+                    disabled
+                    placeholder="Distance will be calculated automatically"
+                  />
+                </a-form-item>
+
+                <a-form-item
+                  label="Estimated delivery time"
+                  name="estimated_delivery_time"
+                >
+                  <a-input v-model:value="formState.estimated_delivery_time" />
+                </a-form-item>
+
+                <a-form-item
+                  label="Actual delivery time"
+                  name="actual_delivery_time"
+                >
+                  <a-input v-model:value="formState.actual_delivery_time" />
+                </a-form-item>
+
+                <a-form-item label="Package weight" name="package_weight">
+                  <a-input v-model:value="formState.package_weight" />
+                </a-form-item>
+
+                <a-form-item
+                  label="Package dimensions"
+                  name="package_dimensions"
+                >
+                  <a-input v-model:value="formState.package_dimensions" />
+                </a-form-item>
+                <a-form-item label="Is fragile?" name="is_fragile">
+                  <a-switch v-model:checked="formState.is_fragile" />
+                </a-form-item>
+
+                <a-form-item
+                  name="special_instructions"
+                  label="Special instructions"
+                >
+                  <a-textarea v-model:value="formState.special_instructions" />
+                </a-form-item>
+
+                <a-form-item label="Payment status" name="payment_status">
+                  <a-select
+                    v-model:value="formState.payment_status"
+                    placeholder="Payment status"
+                  >
+                    <a-select-option value="Unpaid">Unpaid</a-select-option>
+                    <a-select-option value="Paid">Paid</a-select-option>
+                    <a-select-option value="Cancelled"
+                      >Cancelled</a-select-option
+                    >
+                  </a-select>
+                </a-form-item>
+                <a-form-item name="rider_notes" label="Riders notes">
+                  <a-textarea v-model:value="formState.rider_notes" />
+                </a-form-item>
+
+                <a-form-item
+                  name="pickup_time"
+                  label="Pickup time"
+                  v-bind="rangeConfig"
+                >
+                  <a-range-picker
+                    v-model:value="formState['pickup_time']"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                  />
+                </a-form-item>
+
+                <a-form-item label="Delivery attempts" name="delivery_attempts">
+                  <a-input-number v-model:value="formState.delivery_attempts" />
+                </a-form-item>
+
+                <a-form-item
+                  name="failed_delivery_reason"
+                  label="Failed delivery reason"
+                >
+                  <a-textarea
+                    v-model:value="formState.failed_delivery_reason"
+                  />
+                </a-form-item>
+
+                <a-form-item label="Order source" name="order_source">
+                  <a-select
+                    v-model:value="formState.order_source"
+                    placeholder="Order source"
+                  >
+                    <a-select-option value="Internet">Internet</a-select-option>
+                  </a-select>
+                </a-form-item>
+
+                <a-form-item label="Order priority" name="order_priority">
+                  <a-radio-group v-model:value="formState.order_priority">
+                    <a-radio value="1">Low</a-radio>
+                    <a-radio value="2">Medium</a-radio>
+                    <a-radio value="3">High</a-radio>
+                  </a-radio-group>
+                </a-form-item>
+
+                <a-form-item
+                  name="cancellation_reason"
+                  label="Cancellation reason"
+                >
+                  <a-textarea v-model:value="formState.cancellation_reason" />
+                </a-form-item>
+              </div>
+
+              <a-form-item
+                name="scheduled_pickup_time"
+                label="Scheduled pickup time"
+                v-bind="rangeConfig"
+              >
+                <a-range-picker
+                  v-model:value="formState['scheduled_pickup_time']"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                />
+              </a-form-item>
+
+              <a-form-item
+                name="scheduled_delivery_time"
+                label="Scheduled delivery time"
+                v-bind="rangeConfig"
+              >
+                <a-range-picker
+                  v-model:value="formState['scheduled_delivery_time']"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                />
+              </a-form-item>
+
+              <a-form-item
+                name="cancelled_at"
+                label="Cancelled at"
+                v-bind="rangeConfig"
+              >
+                <a-range-picker
+                  v-model:value="formState['cancelled_at']"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
+                  value-format="YYYY-MM-DD HH:mm:ss"
+                />
+              </a-form-item>
+
+              <a-form-item>
+                <a-button type="primary" html-type="submit">Submit</a-button>
+              </a-form-item>
+            </div>
           </a-form>
         </div>
         <FooterTemplate />
@@ -76,7 +253,6 @@ import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import authService from '@/api/services';
 import { GeocoderResult } from '@/types';
-// @ts-ignore
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
@@ -117,6 +293,12 @@ const formState = ref({
   payment_method: '',
   rider_id: 1,
 });
+
+const rangeConfig = {
+  rules: [
+    { type: 'array' as const, required: true, message: 'Please select time!' },
+  ],
+};
 
 // Initialize Mapbox Geocoder for Autocomplete
 onMounted(() => {

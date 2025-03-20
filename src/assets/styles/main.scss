@@ -204,9 +204,11 @@
     padding: 10px 10px;
   }
 }
-/*############
-##Order Table##
-##############*/
+
+/*
+####################
+##Show Order Table##
+####################*/
 
 .table-container {
   display: flex;
@@ -253,4 +255,14 @@
     flex-direction: row;
     justify-content: space-between;
   }
+}
+
+
+/*####################
+##Create Order Table##
+######################*/
+
+.order-container{
+  
+ 
 }

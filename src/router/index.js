@@ -38,7 +38,7 @@ const routes = [
       },
 
       {
-        path: 'orders-history',
+        path: 'history-of-orders',
         name: 'History',
         component: OrdersHistory,
       },

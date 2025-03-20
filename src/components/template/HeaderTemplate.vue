@@ -16,12 +16,12 @@
           <template #overlay>
             <a-menu @click="handleMenuClick">
               <a-menu-item key="1">
-                <UserOutlined />
+                <LogoutOutlined />
                 Logout
               </a-menu-item>
             </a-menu>
           </template>
-          <template #icon><UserOutlined /></template>
+          <template #icon> <LogoutOutlined /></template>
         </a-dropdown-button>
       </div>
     </div>
@@ -30,14 +30,14 @@
 
 <script lang="ts">
 import { ref } from 'vue';
-import { UserOutlined } from '@ant-design/icons-vue';
+import { LogoutOutlined } from '@ant-design/icons-vue';
 import { useRouter } from 'vue-router';
 import authService from '@/api/services';
 import { notify } from '@/utils/notification';
 import Cookies from 'js-cookie';
 
 export default {
-  components: { UserOutlined },
+  components: { LogoutOutlined },
   setup() {
     const loading = ref(false); // Spinner state
     const router = useRouter();
