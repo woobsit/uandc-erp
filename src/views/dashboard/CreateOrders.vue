@@ -9,31 +9,51 @@
           <a-form :model="formState" @finish="onFinish">
             <div class="order-container">
               <div class="order-container__upper-box">
-                <a-form-item label="Full Name" name="fullname">
-                  <a-input v-model:value="formState.fullname" />
-                </a-form-item>
-                <a-form-item label="Customer Phone" name="customer_phone">
-                  <a-input v-model:value="formState.customer_phone" />
-                </a-form-item>
-                <a-form-item label="Customer Email" name="customer_email">
-                  <a-input v-model:value="formState.customer_email" />
-                </a-form-item>
-                <a-form-item label="Pickup Address" name="pickup_address">
+                <a-form-item name="fullname">
                   <a-input
-                    v-model:value="formState.pickup_address"
-                    id="pickup_address"
+                    v-model:value="formState.fullname"
+                    placeholder="Fullname"
                   />
                 </a-form-item>
-                <a-form-item label="Delivery Address" name="delivery_address">
+                <a-form-item name="customer_phone">
                   <a-input
-                    v-model:value="formState.delivery_address"
-                    id="delivery_address"
+                    v-model:value="formState.customer_phone"
+                    placeholder="Customer Phone"
                   />
                 </a-form-item>
-                <a-form-item name="item_description" label="Item Description">
-                  <a-textarea v-model:value="formState.item_description" />
+                <a-form-item name="customer_email">
+                  <a-input
+                    v-model:value="formState.customer_email"
+                    placeholder="Customer Email"
+                  />
                 </a-form-item>
-                <a-form-item label="Status" name="status">
+                <a-form-item>
+                  <div id="pickup_address">
+                    <input type="text" />
+                    <div
+                      class="mapboxgl-ctrl mapboxgl-ctrl-geocoder mapboxgl-ctrl-geocoder--suggestion"
+                    >
+                      <!-- Suggestions should appear here -->
+                    </div>
+                  </div>
+                </a-form-item>
+                <a-form-item>
+                  <div id="delivery_address">
+                    <input type="text" />
+                    <div
+                      class="mapboxgl-ctrl mapboxgl-ctrl-geocoder mapboxgl-ctrl-geocoder--suggestion"
+                    >
+                      <!-- Suggestions should appear here -->
+                    </div>
+                  </div>
+                </a-form-item>
+                <a-form-item name="item_description">
+                  <a-textarea
+                    v-model:value="formState.item_description"
+                    placeholder="Item Description"
+                  />
+                </a-form-item>
+                <a-form-item name="status">
                   <a-select
                     v-model:value="formState.status"
                     placeholder="please select your zone"
@@ -51,7 +71,7 @@
                   </a-select>
                 </a-form-item>
 
-                <a-form-item label="Delivery Type" name="delivery_type">
+                <a-form-item name="delivery_type">
                   <a-select
                     v-model:value="formState.delivery_type"
                     placeholder="please select delivery type"
@@ -64,13 +84,19 @@
                     >
                   </a-select>
                 </a-form-item>
-                <a-form-item label="Total Cost" name="total_cost">
-                  <a-input-number v-model:value="formState.total_cost" />
+                <a-form-item name="total_cost">
+                  <a-input-number
+                    v-model:value="formState.total_cost"
+                    placeholder="Total Cost"
+                  />
                 </a-form-item>
-                <a-form-item label="Discount" name="discount">
-                  <a-input-number v-model:value="formState.discount" />
+                <a-form-item name="discount">
+                  <a-input-number
+                    v-model:value="formState.discount"
+                    placeholder="Discount"
+                  />
                 </a-form-item>
-                <a-form-item label="Payment method" name="payment_method">
+                <a-form-item name="payment_method">
                   <a-select
                     v-model:value="formState.payment_method"
                     placeholder="Payment method"
@@ -88,7 +114,6 @@
                 <a-form-item label="Distance" name="distance">
                   <a-input
                     v-model:value="formState.distance"
-                    disabled
                     placeholder="Distance will be calculated automatically"
                   />
                 </a-form-item>
@@ -193,53 +218,53 @@
                 >
                   <a-textarea v-model:value="formState.cancellation_reason" />
                 </a-form-item>
+
+                <a-form-item
+                  name="scheduled_pickup_time"
+                  label="Scheduled pickup time"
+                  v-bind="rangeConfig"
+                >
+                  <a-range-picker
+                    v-model:value="formState['scheduled_pickup_time']"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                  />
+                </a-form-item>
+
+                <a-form-item
+                  name="scheduled_delivery_time"
+                  label="Scheduled delivery time"
+                  v-bind="rangeConfig"
+                >
+                  <a-range-picker
+                    v-model:value="formState['scheduled_delivery_time']"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                  />
+                </a-form-item>
+
+                <a-form-item
+                  name="cancelled_at"
+                  label="Cancelled at"
+                  v-bind="rangeConfig"
+                >
+                  <a-range-picker
+                    v-model:value="formState['cancelled_at']"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    value-format="YYYY-MM-DD HH:mm:ss"
+                  />
+                </a-form-item>
               </div>
-
-              <a-form-item
-                name="scheduled_pickup_time"
-                label="Scheduled pickup time"
-                v-bind="rangeConfig"
-              >
-                <a-range-picker
-                  v-model:value="formState['scheduled_pickup_time']"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-
-              <a-form-item
-                name="scheduled_delivery_time"
-                label="Scheduled delivery time"
-                v-bind="rangeConfig"
-              >
-                <a-range-picker
-                  v-model:value="formState['scheduled_delivery_time']"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-
-              <a-form-item
-                name="cancelled_at"
-                label="Cancelled at"
-                v-bind="rangeConfig"
-              >
-                <a-range-picker
-                  v-model:value="formState['cancelled_at']"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  value-format="YYYY-MM-DD HH:mm:ss"
-                />
-              </a-form-item>
-
               <a-form-item>
                 <a-button type="primary" html-type="submit">Submit</a-button>
               </a-form-item>
             </div>
           </a-form>
         </div>
+
         <FooterTemplate />
       </a-layout>
     </a-layout>
@@ -302,27 +327,35 @@ const rangeConfig = {
 
 // Initialize Mapbox Geocoder for Autocomplete
 onMounted(() => {
-  const pickupInput = document.getElementById(
-    'pickup_address'
-  ) as HTMLInputElement;
-  const deliveryInput = document.getElementById(
-    'delivery_address'
-  ) as HTMLInputElement;
-
   const pickupGeocoder = new MapboxGeocoder({
-    accessToken: process.env.VUE_APP_MAPBOX_ACCESS_TOKEN,
+    accessToken:
+      'pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ',
     types: 'address',
+    placeholder: 'Enter pickup address',
   });
 
   const deliveryGeocoder = new MapboxGeocoder({
-    accessToken: process.env.VUE_APP_MAPBOX_ACCESS_TOKEN,
+    accessToken:
+      'pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ',
     types: 'address',
+    placeholder: 'Enter delivery address',
   });
 
   // Attach Geocoder to input fields
+  const pickupInput = document.getElementById('pickup_address');
+  const deliveryInput = document.getElementById('delivery_address');
 
-  pickupGeocoder.addTo('#pickup_address');
-  deliveryGeocoder.addTo('#delivery_address');
+  if (pickupInput) {
+    pickupGeocoder.addTo('#pickup_address');
+  } else {
+    console.error('Pickup address input field not found');
+  }
+
+  if (deliveryInput) {
+    deliveryGeocoder.addTo('#delivery_address');
+  } else {
+    console.error('Delivery address input field not found');
+  }
 
   // Update formState when an address is selected
   pickupGeocoder.on('result', (event: GeocoderResult) => {
@@ -360,7 +393,7 @@ const getDistance = async (
   const response = await fetch(
     `https://api.mapbox.com/directions/v5/mapbox/driving/${encodeURIComponent(
       origin
-    )};${encodeURIComponent(destination)}?access_token=${process.env.VUE_APP_MAPBOX_ACCESS_TOKEN}`
+    )};${encodeURIComponent(destination)}?access_token=pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ`
   );
   const data = await response.json();
   if (data.routes && data.routes.length > 0) {

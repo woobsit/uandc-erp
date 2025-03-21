@@ -5,7 +5,9 @@
       <a-layout>
         <HeaderTemplate />
         <div class="content-container">
-          <a-typography-title :level="3">View Orders</a-typography-title>
+          <a-typography-title :level="3" class="table__header"
+            >View Orders</a-typography-title
+          >
           <div class="table-container">
             <template v-if="initialLoading">
               <a-space class="table__spinner-container">
