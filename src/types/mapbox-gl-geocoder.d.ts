@@ -1,3 +1,4 @@
+/* eslint-disable */
 declare module '@mapbox/mapbox-gl-geocoder' {
   import { LngLatLike } from 'mapbox-gl';
 

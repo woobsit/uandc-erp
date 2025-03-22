@@ -1,6 +1,6 @@
 // src/api/services.ts
 import handleRequest from '@/api/handleRequest';
-import type { APIParams, CreateOrderParams } from '@/types';
+import type { APIParams, CreateOrderParams } from '@/types/types';
 
 const authService = {
   //Admin login services

@@ -169,7 +169,7 @@ import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import type { TableColumnsType } from 'ant-design-vue';
 import authService from '@/api/services';
-import type { Order } from '@/types';
+import type { Order } from '@/types/types';
 import { EditFilled, EyeFilled, DeleteFilled } from '@ant-design/icons-vue';
 
 // Function for striped rows

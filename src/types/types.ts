@@ -29,7 +29,7 @@ export type CreateOrderParams = {
   item_description: string; // Required
   status?: string; // Optional, default 'Pending'
   customer_phone: string; // Required
-  customer_email?: string; // Optional
+  customer_email: string; // Optional
   delivery_type?: string; // Optional, default 'Standard'
   delivery_time_slot?: string; // Optional
   distance?: number; // Optional
@@ -51,7 +51,7 @@ export type CreateOrderParams = {
   delivery_attempts?: number; // Optional, default 0
   failed_delivery_reason?: string; // Optional
   order_source?: string; // Optional, default 'Website'
-  order_priority?: string; // Optional, default 'Medium'
+  order_priority?: number; // Optional, default 'Medium'
   cancellation_reason?: string; // Optional
   scheduled_pickup_time?: string; // Optional (timestamp)
   scheduled_delivery_time?: string; // Optional (timestamp)
