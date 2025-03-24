@@ -42,25 +42,21 @@
                     <a-typography-text>No records</a-typography-text>
                   </template>
                   <template v-else>
-                    <template v-if="column.key === 'fullname'">
+                    <template v-if="column.key === 'sender_fullname'">
                       <router-link
                         :to="`/view/${record.id}`"
-                        :title="record.fullname"
+                        :title="record.sender_fullname"
                         ><a-typography-text strong>{{
-                          record.fullname
+                          record.sender_fullname
                         }}</a-typography-text></router-link
                       >
                     </template>
-                    <template v-if="column.key === 'customer_phone'">
-                      <a-typography-text :title="record.customer_phone">{{
-                        record.customer_phone
+                    <template v-if="column.key === 'sender_phone'">
+                      <a-typography-text :title="record.sender_phone">{{
+                        record.sender_phone
                       }}</a-typography-text>
                     </template>
-                    <template v-if="column.key === 'pickup_time'">
-                      <a-typography-text :title="record.pickup_time">{{
-                        record.pickup_time
-                      }}</a-typography-text>
-                    </template>
+
                     <template v-if="column.key === 'pickup_address'">
                       <a-typography-text :title="record.pickup_address">{{
                         record.pickup_address
@@ -69,6 +65,13 @@
                     <template v-if="column.key === 'delivery_address'">
                       <a-typography-text :title="record.delivery_address">{{
                         record.delivery_address
+                      }}</a-typography-text>
+                    </template>
+                    <template v-if="column.key === 'recipient_fullname'">
+                    </template>
+                    <template v-if="column.key === 'recipient_phone'">
+                      <a-typography-text :title="record.recipient_phone">{{
+                        record.recipient_phone
                       }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'delivery_type'">
@@ -107,6 +110,11 @@
                     <template v-if="column.key === 'delivery_time_slot'">
                       <a-typography-text :title="record.delivery_time_slot">{{
                         record.delivery_time_slot
+                      }}</a-typography-text>
+                    </template>
+                    <template v-if="column.key === 'pickup_time'">
+                      <a-typography-text :title="record.pickup_time">{{
+                        record.pickup_time
                       }}</a-typography-text>
                     </template>
                     <template v-if="column.key === 'distance'">
@@ -185,28 +193,20 @@ const handleResizeColumn = (w: number, col: { width?: number }) => {
 // Define table columns
 const columns = ref<TableColumnsType>([
   {
-    title: 'Customer name',
-    dataIndex: 'fullname',
-    key: 'fullname',
+    title: 'Sender name',
+    dataIndex: 'sender_fullname',
+    key: 'sender_fullname',
     ellipsis: true,
     width: 150,
     resizable: true,
     fixed: true,
   },
   {
-    title: 'Phone number',
-    key: 'customer_phone',
-    dataIndex: 'customer_phone',
+    title: 'Sender number',
+    key: 'sender_phone',
+    dataIndex: 'sender_phone',
     ellipsis: true,
     width: 130,
-    resizable: true,
-  },
-  {
-    title: 'Pickup time',
-    dataIndex: 'pickup_time',
-    key: 'pickup_time',
-    ellipsis: true,
-    width: 110,
     resizable: true,
   },
   {
@@ -223,6 +223,22 @@ const columns = ref<TableColumnsType>([
     dataIndex: 'delivery_address',
     ellipsis: true,
     width: 200,
+    resizable: true,
+  },
+  {
+    title: 'Recipient name',
+    dataIndex: 'recipient_fullname',
+    key: 'recipient_fullname',
+    ellipsis: true,
+    width: 150,
+    resizable: true,
+  },
+  {
+    title: 'Recipient number',
+    key: 'recipient_phone',
+    dataIndex: 'recipient_phone',
+    ellipsis: true,
+    width: 130,
     resizable: true,
   },
   {
@@ -268,6 +284,14 @@ const columns = ref<TableColumnsType>([
     dataIndex: 'delivery_time_slot',
     ellipsis: true,
     width: 100,
+  },
+  {
+    title: 'Pickup time',
+    dataIndex: 'pickup_time',
+    key: 'pickup_time',
+    ellipsis: true,
+    width: 110,
+    resizable: true,
   },
   {
     title: 'Distance',

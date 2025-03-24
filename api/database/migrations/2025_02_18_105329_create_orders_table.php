@@ -13,15 +13,15 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-
-            $table->string('fullname')->index(); // Index for faster search
-
+            $table->string('sender_fullname')->index(); // Index for faster search
             $table->text('pickup_address', 1000);
             $table->text('delivery_address', 1000);
             $table->text('item_description');
             $table->string('status')->default('Pending')->index(); // Commonly filtered
-            $table->string('customer_phone')->index(); // Search optimization
-            $table->string('customer_email')->nullable();
+            $table->string('sender_phone')->index(); // Search optimization
+            $table->string('sender_email')->nullable();
+            $table->string('recipient_fullname')->index(); // Index for faster search
+            $table->string('recipient_phone')->index();
             $table->string('delivery_type')->default('Standard');
             $table->string('delivery_time_slot')->nullable();
             $table->decimal('distance', 8, 2)->nullable();

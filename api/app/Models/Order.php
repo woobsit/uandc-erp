@@ -11,7 +11,7 @@ class Order extends Model
     use HasFactory;
 
     // Accessor for capitalizing first name
-    public function getFullnameAttribute($value)
+    public function getSenderFullnameAttribute($value)
     {
         return ucwords(strtolower($value));
     }

@@ -17,13 +17,15 @@ class OrderFactory extends Factory
     public function definition(): array
     {
         return [
-            'fullname'               => $this->faker->name,
+            'sender_fullname'               => $this->faker->name,
+            'recipient_fullname'               => $this->faker->name,
             'pickup_address'          => $this->faker->address,
             'delivery_address'        => $this->faker->address,
             'item_description'        => $this->faker->paragraph,
             'status'                  => $this->faker->randomElement(['Pending', 'Processing', 'Completed', 'Cancelled']),
-            'customer_phone'          => $this->faker->phoneNumber,
-            'customer_email'          => $this->faker->safeEmail,
+            'sender_phone'          => $this->faker->phoneNumber,
+            'recipient_phone'          => $this->faker->phoneNumber,
+            'sender_email'          => $this->faker->safeEmail,
             'delivery_type'           => $this->faker->randomElement(['Standard', 'Express', 'Same Day', 'Overnight']),
             'delivery_time_slot'      => $this->faker->time('H:i:s'),
             'distance'                => $this->faker->randomFloat(2, 1, 100),

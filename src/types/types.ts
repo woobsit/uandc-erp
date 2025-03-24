@@ -1,7 +1,9 @@
 export interface Order {
   id: number;
-  fullname: string;
-  customer_phone: string;
+  sender_fullname: string;
+  sender_phone: string;
+  recipient_fullname: string;
+  recipient_phone: string;
   pickup_time: string;
   pickup_address: string;
   delivery_address: string;
@@ -23,13 +25,15 @@ export type APIParams = {
 };
 
 export type CreateOrderParams = {
-  fullname: string; // Required
+  sender_fullname: string; // Required
+  recipient_fullname: string;
   pickup_address: string; // Required
   delivery_address: string; // Required
   item_description: string; // Required
   status?: string; // Optional, default 'Pending'
-  customer_phone: string; // Required
-  customer_email: string; // Optional
+  sender_phone: string; // Required
+  recipient_phone: string; // Required
+  sender_email: string; // Optional
   delivery_type?: string; // Optional, default 'Standard'
   delivery_time_slot?: string; // Optional
   distance?: number; // Optional
@@ -65,4 +69,19 @@ export interface GeocoderResult {
       coordinates: [number, number];
     };
   };
+}
+
+export interface NominatimAddress {
+  place_id: number;
+  licence: string;
+  osm_type: string;
+  osm_id: number;
+  boundingbox: string[];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: number;
+  icon?: string;
 }

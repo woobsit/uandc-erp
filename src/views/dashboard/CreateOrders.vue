@@ -14,8 +14,8 @@
           >
             <div class="order-container">
               <a-form-item
-                name="fullname"
-                label="Fullname"
+                name="sender_fullname"
+                label="Sender fullname"
                 :rules="[
                   { required: true, message: 'Please enter full name!' },
                   {
@@ -28,41 +28,53 @@
                   },
                 ]"
               >
-                <a-input v-model:value="formState.fullname">
+                <a-input
+                  v-model:value="formState.sender_fullname"
+                  placeholder="Sender fullname"
+                >
                   <template #prefix
                     ><UserOutlined
                       style="color: rgba(0, 0, 0, 0.25)" /></template
                 ></a-input>
               </a-form-item>
               <a-form-item
-                name="customer_phone"
+                name="sender_phone"
                 label="Phone"
                 :rules="[
                   { required: true, message: 'Please enter phone number!' },
                   {
-                    pattern: /^[0-9]{10,15}$/,
+                    pattern: /^(0)\d{10}$/,
                     message: 'Please enter a valid phone number!',
                   },
                 ]"
               >
-                <a-input v-model:value="formState.customer_phone">
+                <a-input
+                  v-model:value="formState.sender_phone"
+                  placeholder="Sender phone number"
+                >
                   <template #prefix
                     ><PhoneOutlined style="color: rgba(0, 0, 0, 0.25)"
                   /></template>
                 </a-input>
               </a-form-item>
               <a-form-item
-                name="customer_email"
-                label="Email"
+                name="sender_email"
+                label="Sender email"
                 :rules="[
-                  { required: true, message: 'Please enter email address!' },
+                  {
+                    required: true,
+                    message: 'Please enter sender email address!',
+                  },
                   {
                     type: 'email',
-                    message: 'Please enter a valid email address!',
+                    message: 'Please enter a valid email address as sender!',
                   },
                 ]"
               >
-                <a-input v-model:value="formState.customer_email">
+                <a-input
+                  v-model:value="formState.sender_email"
+                  placeholder="Sender email"
+                >
                   <template #prefix
                     ><MailOutlined style="color: rgba(0, 0, 0, 0.25)"
                   /></template>
@@ -75,14 +87,23 @@
                   { required: true, message: 'Please enter pickup address!' },
                 ]"
               >
-                <div id="pickup_address">
-                  <input type="text" />
-                  <div
-                    class="mapboxgl-ctrl mapboxgl-ctrl-geocoder mapboxgl-ctrl-geocoder--suggestion"
+                <a-select
+                  v-model:value="formState.pickup_address"
+                  show-search
+                  placeholder="Enter pickup address"
+                  :filter-option="false"
+                  :not-found-content="null"
+                  @search="handlePickupAddressSearch"
+                  @change="calculateDistance"
+                >
+                  <a-select-option
+                    v-for="address in pickupAddressSuggestions"
+                    :key="address.place_id"
+                    :value="address.display_name"
                   >
-                    <!-- Suggestions should appear here -->
-                  </div>
-                </div>
+                    {{ address.display_name }}
+                  </a-select-option>
+                </a-select>
               </a-form-item>
               <a-form-item
                 name="delivery_address"
@@ -91,20 +112,80 @@
                   { required: true, message: 'Please enter delivery address!' },
                 ]"
               >
-                <div id="delivery_address">
-                  <input type="text" />
-                  <div
-                    class="mapboxgl-ctrl mapboxgl-ctrl-geocoder mapboxgl-ctrl-geocoder--suggestion"
+                <a-select
+                  v-model:value="formState.delivery_address"
+                  show-search
+                  placeholder="Enter delivery address"
+                  :filter-option="false"
+                  :not-found-content="null"
+                  @search="handleDeliveryAddressSearch"
+                  @change="calculateDistance"
+                >
+                  <a-select-option
+                    v-for="address in deliveryAddressSuggestions"
+                    :key="address.place_id"
+                    :value="address.display_name"
                   >
-                    <!-- Suggestions should appear here -->
-                  </div>
-                </div>
+                    {{ address.display_name }}
+                  </a-select-option>
+                </a-select>
+              </a-form-item>
+              <a-form-item
+                name="recipient_fullname"
+                label="Recipient fullname"
+                :rules="[
+                  {
+                    required: true,
+                    message: 'Please enter full name of recipient!',
+                  },
+                  {
+                    min: 3,
+                    message: 'Full name must be at least 3 characters!',
+                  },
+                  {
+                    max: 25,
+                    message: 'Full name cannot exceed 25 characters!',
+                  },
+                ]"
+              >
+                <a-input
+                  v-model:value="formState.recipient_fullname"
+                  placeholder="Recipient fullname"
+                >
+                  <template #prefix
+                    ><UserOutlined
+                      style="color: rgba(0, 0, 0, 0.25)" /></template
+                ></a-input>
+              </a-form-item>
+              <a-form-item
+                name="recipient_phone"
+                label="Recipient phone"
+                :rules="[
+                  {
+                    required: true,
+                    message: 'Please enter phone number for recipient!',
+                  },
+                  {
+                    pattern: /^[0-9]{10,15}$/,
+                    message: 'Please enter a valid phone number for recipient!',
+                  },
+                ]"
+              >
+                <a-input
+                  v-model:value="formState.recipient_phone"
+                  placeholder="Recipient phone number"
+                >
+                  <template #prefix
+                    ><PhoneOutlined style="color: rgba(0, 0, 0, 0.25)"
+                  /></template>
+                </a-input>
               </a-form-item>
               <a-form-item name="item_description" label="Item Description">
                 <a-textarea
                   v-model:value="formState.item_description"
                   :maxlength="1000"
                   show-count
+                  placeholder="Item description"
                 />
               </a-form-item>
               <a-form-item name="status" label="Status">
@@ -181,6 +262,7 @@
                 <a-input
                   v-model:value="formState.distance"
                   placeholder="Distance will be calculated automatically"
+                  disabled
                 />
               </a-form-item>
 
@@ -188,14 +270,20 @@
                 label="Estimated delivery time"
                 name="estimated_delivery_time"
               >
-                <a-input v-model:value="formState.estimated_delivery_time" />
+                <a-input
+                  v-model:value="formState.estimated_delivery_time"
+                  placeholder="Estimated delivery time"
+                />
               </a-form-item>
 
               <a-form-item
                 label="Actual delivery time"
                 name="actual_delivery_time"
               >
-                <a-input v-model:value="formState.actual_delivery_time" />
+                <a-input
+                  v-model:value="formState.actual_delivery_time"
+                  placeholder="Actual delivery time"
+                />
               </a-form-item>
 
               <a-form-item
@@ -215,7 +303,10 @@
               </a-form-item>
 
               <a-form-item label="Package dimensions" name="package_dimensions">
-                <a-input v-model:value="formState.package_dimensions" />
+                <a-input
+                  v-model:value="formState.package_dimensions"
+                  placeholder="Package dimensions"
+                />
               </a-form-item>
               <a-form-item label="Is fragile?" name="is_fragile">
                 <a-switch v-model:checked="formState.is_fragile" />
@@ -229,17 +320,8 @@
                   v-model:value="formState.special_instructions"
                   :maxlength="1000"
                   show-count
+                  placeholder="Special instructions"
                 />
-                <div
-                  :style="{
-                    color:
-                      formState.special_instructions.length > 1000
-                        ? 'red'
-                        : 'inherit',
-                  }"
-                >
-                  {{ formState.special_instructions.length }}/1000
-                </div>
               </a-form-item>
 
               <a-form-item label="Payment status" name="payment_status">
@@ -257,15 +339,8 @@
                   v-model:value="formState.rider_notes"
                   :maxlength="1000"
                   show-count
+                  placeholder="Riders notes"
                 />
-                <div
-                  :style="{
-                    color:
-                      formState.rider_notes.length > 1000 ? 'red' : 'inherit',
-                  }"
-                >
-                  {{ formState.rider_notes.length }}/1000
-                </div>
               </a-form-item>
 
               <a-form-item
@@ -289,7 +364,10 @@
                 name="failed_delivery_reason"
                 label="Failed delivery reason"
               >
-                <a-textarea v-model:value="formState.failed_delivery_reason" />
+                <a-textarea
+                  v-model:value="formState.failed_delivery_reason"
+                  placeholder="Failed delivery reason"
+                />
               </a-form-item>
 
               <a-form-item label="Order source" name="order_source">
@@ -308,7 +386,7 @@
               <a-form-item label="Order priority" name="order_priority">
                 <a-radio-group v-model:value="formState.order_priority">
                   <a-radio value="1">Low</a-radio>
-                  <a-radio value="2" checked>Medium</a-radio>
+                  <a-radio value="2">Medium</a-radio>
                   <a-radio value="3">High</a-radio>
                 </a-radio-group>
               </a-form-item>
@@ -317,7 +395,10 @@
                 name="cancellation_reason"
                 label="Cancellation reason"
               >
-                <a-textarea v-model:value="formState.cancellation_reason" />
+                <a-textarea
+                  v-model:value="formState.cancellation_reason"
+                  placeholder="Cancellation reason"
+                />
               </a-form-item>
 
               <a-form-item
@@ -373,15 +454,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import SideBar from '@/components/template/SidebarTemplate.vue';
 import HeaderTemplate from '@/components/template/HeaderTemplate.vue';
 import FooterTemplate from '@/components/template/FooterTemplate.vue';
 import authService from '@/api/services';
-import { GeocoderResult } from '@/types/types';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import 'mapbox-gl/dist/mapbox-gl.css';
-import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
+import type { NominatimAddress } from '@/types/types';
+
 import {
   UserOutlined,
   PhoneOutlined,
@@ -390,13 +469,15 @@ import {
 
 // Define form state
 const formState = ref({
-  fullname: '',
+  sender_fullname: '',
+  recipient_fullname: '',
   pickup_address: '',
   delivery_address: '',
   item_description: '',
   status: 'Pending',
-  customer_phone: '',
-  customer_email: '',
+  sender_phone: '',
+  recipient_phone: '',
+  sender_email: '',
   delivery_type: 'Standard',
   delivery_time_slot: '',
   distance: 0,
@@ -434,81 +515,88 @@ const rangeConfig = {
   ],
 };
 
-// Initialize Mapbox Geocoder for Autocomplete
-onMounted(() => {
-  const pickupGeocoder = new MapboxGeocoder({
-    accessToken:
-      'pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ',
-    types: 'address',
-    placeholder: 'Enter pickup address',
-  });
+// Address suggestions
+const pickupAddressSuggestions = ref<NominatimAddress[]>([]);
+const deliveryAddressSuggestions = ref<NominatimAddress[]>([]);
 
-  const deliveryGeocoder = new MapboxGeocoder({
-    accessToken:
-      'pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ',
-    types: 'address',
-    placeholder: 'Enter delivery address',
-  });
+// Fetch address suggestions from Nominatim
+const fetchAddressSuggestions = async (
+  query: string
+): Promise<NominatimAddress[]> => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+      query
+    )}&limit=5`
+  );
+  const data = await response.json();
+  return data as NominatimAddress[];
+};
 
-  // Attach Geocoder to input fields
-  const pickupInput = document.getElementById('pickup_address');
-  const deliveryInput = document.getElementById('delivery_address');
-
-  if (pickupInput) {
-    pickupGeocoder.addTo('#pickup_address');
+// Handle pickup address search
+const handlePickupAddressSearch = async (query: string) => {
+  if (query) {
+    const suggestions = await fetchAddressSuggestions(query);
+    pickupAddressSuggestions.value = suggestions;
   } else {
-    console.error('Pickup address input field not found');
+    pickupAddressSuggestions.value = [];
   }
+};
 
-  if (deliveryInput) {
-    deliveryGeocoder.addTo('#delivery_address');
+// Handle delivery address search
+const handleDeliveryAddressSearch = async (query: string) => {
+  if (query) {
+    const suggestions = await fetchAddressSuggestions(query);
+    deliveryAddressSuggestions.value = suggestions;
   } else {
-    console.error('Delivery address input field not found');
+    deliveryAddressSuggestions.value = [];
   }
+};
 
-  // Update formState when an address is selected
-  pickupGeocoder.on('result', (event: GeocoderResult) => {
-    formState.value.pickup_address = event.result.place_name || '';
-    calculateDistance();
-  });
+// 1. Define coordinate type
+type Coordinate = [number, number];
 
-  deliveryGeocoder.on('result', (event: GeocoderResult) => {
-    formState.value.delivery_address = event.result.place_name || '';
-    calculateDistance();
-  });
-});
+// 2. Update getCoordinates to return Coordinate
+const getCoordinates = async (address: string): Promise<Coordinate> => {
+  const response = await fetch(
+    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}&limit=1`
+  );
+  const data = await response.json();
+  if (data.length > 0) {
+    return [parseFloat(data[0].lon), parseFloat(data[0].lat)];
+  }
+  throw new Error('Address not found');
+};
 
-// Calculate distance between pickup and delivery addresses
+// 3. Update getDistance to expect Coordinate type
+const getDistance = async (
+  origin: Coordinate,
+  destination: Coordinate
+): Promise<number> => {
+  const response = await fetch(
+    `https://router.project-osrm.org/route/v1/driving/${origin[0]},${origin[1]};${destination[0]},${destination[1]}?overview=false`
+  );
+  const data = await response.json();
+  if (data.routes && data.routes.length > 0) {
+    return data.routes[0].distance / 1000; // Distance in kilometers
+  }
+  throw new Error('Distance calculation failed: No route found');
+};
+
+// 4. Update the calling code
 const calculateDistance = async () => {
   const pickupAddress = formState.value.pickup_address;
   const deliveryAddress = formState.value.delivery_address;
 
   if (pickupAddress && deliveryAddress) {
     try {
-      const distance = await getDistance(pickupAddress, deliveryAddress);
+      const pickupCoords = await getCoordinates(pickupAddress);
+      const deliveryCoords = await getCoordinates(deliveryAddress);
+      const distance = await getDistance(pickupCoords, deliveryCoords);
       formState.value.distance = distance;
     } catch (error) {
       console.error('Error calculating distance:', error);
-      formState.value.distance = 0; // Reset distance on error
+      formState.value.distance = 0;
     }
-  }
-};
-
-// Function to calculate distance using Mapbox Directions API
-const getDistance = async (
-  origin: string,
-  destination: string
-): Promise<number> => {
-  const response = await fetch(
-    `https://api.mapbox.com/directions/v5/mapbox/driving/${encodeURIComponent(
-      origin
-    )};${encodeURIComponent(destination)}?access_token=pk.eyJ1Ijoid29vYnNpdCIsImEiOiJjbThmdDE5d3Qwa2IyMmtzZDdlMjA2ZjA0In0.sJjalkK3ent1d8pFGob_oQ`
-  );
-  const data = await response.json();
-  if (data.routes && data.routes.length > 0) {
-    return data.routes[0].distance / 1000; // Distance in kilometers
-  } else {
-    throw new Error('Distance calculation failed: No route found');
   }
 };
 

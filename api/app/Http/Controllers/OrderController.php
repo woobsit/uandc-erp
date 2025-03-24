@@ -26,8 +26,10 @@ class OrderController extends Controller
             $order = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($results) {
                 return Order::select([
                     'id',
-                    'fullname',
-                    'customer_phone',
+                    'sender_fullname',
+                    'sender_phone',
+                    'recipient_fullname',
+                    'recipient_phone',
                     'pickup_time',
                     'pickup_address',
                     'delivery_address',
@@ -76,13 +78,15 @@ class OrderController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'full_name' => 'required|min:3|max:30',
+                'sender_fullname' => 'required|min:3|max:30',
+                'recipient_fullname' => 'required|min:3|max:30',
                 'pickup_address' => 'required|max:1000',
                 'delivery_address' => 'required|max:1000',
                 'item_description' => 'required|max:1000',
                 'status' => 'required|in:Pending,Processing,Completed,Cancelled',
-                'customer_phone' => ['required', 'regex:/^0[0-9]{10}$/'],
-                'customer_email' => 'nullable',
+                'sender_phone' => ['required', 'regex:/^0[0-9]{10}$/'],
+                'recipient_phone' => ['required', 'regex:/^0[0-9]{10}$/'],
+                'sender_email' => 'nullable',
                 'delivery_type' => 'required',
                 'delivery_time_slot' => 'nullable',
                 'distance' => 'nullable',
@@ -118,13 +122,15 @@ class OrderController extends Controller
             }
 
             $order = Order::create([
-                'full_name' => $request->input('full_name'),
+                'sender_fullname' => $request->input('sender_fullname'),
+                'recipient_fullname' => $request->input('recipient_fullname'),
                 'pickup_address' => $request->input('pickup_address'),
                 'delivery_address' => $request->input('delivery_address'),
                 'item_description' => $request->input('item_description'),
                 'status' => $request->input('status'),
-                'customer_phone' => $request->input('customer_phone'),
-                'customer_email' => $request->input('customer_email'),
+                'sender_phone' => $request->input('sender_phone'),
+                'recipient_phone' => $request->input('recipient_phone'),
+                'sender_email' => $request->input('sender_email'),
                 'delivery_type' => $request->input('delivery_type'),
                 'delivery_time_slot' => $request->input('delivery_time_slot'),
                 'distance' => $request->input('distance'),
