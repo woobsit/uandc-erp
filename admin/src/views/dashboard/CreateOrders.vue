@@ -189,14 +189,11 @@
                 />
               </a-form-item>
               <a-form-item name="status" label="Status">
-                <a-select v-model:value="formState.status">
-                  <a-select-option value="Pending">Pending</a-select-option>
-                  <a-select-option value="Processing"
-                    >Processing</a-select-option
-                  >
-                  <a-select-option value="Completed">Completed</a-select-option>
-                  <a-select-option value="Cancelled">Cancelled</a-select-option>
-                </a-select>
+                <a-input
+                  v-model:value="formState.status"
+                  placeholder="Pending"
+                  disabled
+                />
               </a-form-item>
 
               <a-form-item name="delivery_type" label="Delivery type">
