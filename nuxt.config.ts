@@ -12,5 +12,15 @@ export default defineNuxtConfig({
     }
   },
   devtools: { enabled: true },
-  compatibilityDate: "2025-03-26"
+  compatibilityDate: "2025-03-26",
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
+  css: ['~/assets/styles/main.css'],
+  build: {
+    transpile: ['@heroicons/vue']
+  }
 })

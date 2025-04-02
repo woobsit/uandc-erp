@@ -5,3 +5,7 @@
     <NuxtLink to="/about" class="text-blue-500">About Page</NuxtLink>
   </div>
 </template>
+<script setup>
+
+
+</script>
