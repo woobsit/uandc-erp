@@ -1,11 +1,14 @@
 <!-- ~/pages/index.vue -->
 <template>
   <div>
-    <h1 class="text-3xl font-bold">Homepage</h1>
-    <NuxtLink to="/about" class="text-blue-500">About Page</NuxtLink>
+    <AppHeader/>
+    <HeroSlider/>
+    <NuxtLink to="/about" class="text-blue-500">
+</NuxtLink>
   </div>
 </template>
 <script setup>
-
+import AppHeader from '~/components/templates/AppHeader.vue';
+import HeroSlider from '~/components/templates/HeroSlider.vue';
 
 </script>

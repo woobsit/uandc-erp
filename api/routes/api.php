@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\auth\AdminAuthController;
+use App\Http\Controllers\auth\UserAuthController;
 use App\Http\Controllers\OrderController;
 
 /*
@@ -19,10 +20,15 @@ use App\Http\Controllers\OrderController;
 Route::middleware(['api'])->prefix('v1')->group(function () {
     //Admin Login
     Route::post('/admin-login', [AdminAuthController::class, 'adminLogin']);
+    //User Login
+    Route::post('/user-login', [UserAuthController::class, 'userLogin']);
 });
 
 /*User routes*/
-Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {});
+Route::middleware(['auth:api', 'scope:user'])->prefix('v1')->group(function () {
+    //User Logout
+    Route::post('/user-logout', [UserAuthController::class, 'userLogout']);
+});
 
 
 Route::middleware(['auth:admin', 'scope:admin'])->prefix('v1')->group(function () {

@@ -1,12 +1,21 @@
 <!-- ~/layouts/default.vue -->
 <template>
+   
+   <v-app>
     <div class="root-layout">
-      <NavBar /> 
+      <Head>
+      <Title>UandC wheels</Title>
+      <Meta name="description" content="Professional logistics and shipping solutions" />
+      <Meta name="keywords" content="logistics, shipping, freight" />
+    </Head>
+      <N
+      avBar /> 
       <main>
         <slot />  
       </main>
       <Footer /> 
     </div>
+  </v-app>
   </template>
   
   <script setup>

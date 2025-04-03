@@ -80,7 +80,7 @@
         "../node_modules/nuxt"
       ],
       "vite/client": [
-        "../node_modules/nuxt/node_modules/vite/client"
+        "../node_modules/vite/client"
       ],
       "#shared": [
         "../shared"
