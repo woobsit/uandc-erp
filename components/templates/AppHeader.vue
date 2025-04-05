@@ -3,14 +3,17 @@
       app
       dark
       elevate-on-scroll
-      class="bg-transparent pl-3"
+      class="bg-transparent pl-3 fixed"
+      
     >
       <!-- Logo/Title on the left -->
-      <nuxt-link to="/" class="d-flex align-center text-decoration-none">
-        <v-toolbar-title class="font-weight-bold white--text">
-          {{ appTitle }}
-        </v-toolbar-title>
-      </nuxt-link>
+       <nuxt-link to="/" class="d-flex align-center text-decoration-none">
+        <img 
+        src="/images/logo.png" 
+        :alt="appTitle"
+        class="logo-image"
+      />
+    </nuxt-link>
   
       <!-- Desktop Navigation -->
       <v-toolbar-items class="ml-5 hidden-sm-and-down">
@@ -132,7 +135,8 @@
   <script setup>
   import { ref, computed } from 'vue'
   import { useAuthStore } from '~/stores/auth' // Assuming you're using Pinia
-  
+  //import logo from '~/assets/images/logo.png'
+
   const appTitle = ref('U&C wheels')
   const drawer = ref(false)
   const searchDialog = ref(false)
@@ -174,11 +178,21 @@
   </script>
   
   <style scoped>
-  .active-nav-item {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-  
-  .v-list-item--active {
-    color: rgb(var(--v-theme-primary)) !important;
-  }
+  .logo-image {
+  height: 40px; /* Adjust as needed */
+  width: auto; /* Maintain aspect ratio */
+  max-width: 150px; /* Prevent too wide */
+  object-fit: contain; /* Similar to v-img's contain */
+}
+
+/* Ensure header stays transparent */
+.v-app-bar {
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.v-app-bar--is-scrolled {
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(5px);
+}
   </style>

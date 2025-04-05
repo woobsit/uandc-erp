@@ -2,7 +2,7 @@
   <v-container fluid class="pa-0 hero-slider-container">
     
     <v-carousel
-      v-model="currentSlide"
+    v-model="currentSlide"
       :continuous="true"
       :cycle="autoRotate"
       :show-arrows="showArrows"
@@ -12,6 +12,28 @@
       @mouseenter="pauseRotation"
       @mouseleave="resumeRotation"
     >
+     <!-- Add this style to make arrows visible -->
+     <template v-slot:prev="{ props }">
+        <v-btn
+          icon
+          size="x-large"
+          color="white"
+          v-bind="props"
+        >
+          <v-icon size="x-large">mdi-chevron-left</v-icon>
+        </v-btn>
+      </template>
+      
+      <template v-slot:next="{ props }">
+        <v-btn
+          icon
+          size="x-large"
+          color="white"
+          v-bind="props"
+        >
+          <v-icon size="x-large">mdi-chevron-right</v-icon>
+        </v-btn>
+      </template>
       <v-carousel-item
         v-for="(slide, index) in slides"
         :key="index"
@@ -52,6 +74,7 @@
             </v-row>
           </v-container>
         </v-sheet>
+       
       </v-carousel-item>
     </v-carousel>
   </v-container>
@@ -191,5 +214,14 @@ const handleButtonClick = (slide: HeroSlide) => {
   .hero-slider-container :deep(.text-h6) {
     font-size: 1rem !important;
   }
+}
+
+.v-carousel__controls {
+  background: transparent !important;
+}
+
+.v-btn--icon.v-btn--density-default {
+  background: rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(5px);
 }
 </style>

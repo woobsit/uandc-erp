@@ -846,7 +846,9 @@ const _inlineRuntimeConfig = {
     "baseURL": "/_ipx",
     "alias": {},
     "fs": {
-      "dir": []
+      "dir": [
+        "C:/xampp/htdocs/uandc-erp/public"
+      ]
     },
     "http": {
       "domains": []
