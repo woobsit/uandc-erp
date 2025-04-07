@@ -6,17 +6,20 @@
       class="bg-transparent pl-3 fixed"
       
     >
+
+    <div class="min-w-[1920px] mx-auto" style="border:2px solid red !important;">
       <!-- Logo/Title on the left -->
-       <nuxt-link to="/" class="d-flex align-center text-decoration-none">
+       <nuxt-link to="/" class="d-flex align-center text-decoration-none"
+       >
         <img 
         src="/images/logo.png" 
         :alt="appTitle"
         class="logo-image"
       />
-    </nuxt-link>
+        </nuxt-link>
   
       <!-- Desktop Navigation -->
-      <v-toolbar-items class="ml-5 hidden-sm-and-down">
+      <v-toolbar-items class="ml-5 hidden-sm-and-down font-serif">
         <v-btn
           v-for="(item, index) in navItems"
           :key="index"
@@ -76,7 +79,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-  
+    </div>
       <!-- Mobile menu button -->
       <v-app-bar-nav-icon
         class="hidden-md-and-up"
@@ -179,7 +182,7 @@
   
   <style scoped>
   .logo-image {
-  height: 40px; /* Adjust as needed */
+  height: 60px; /* Adjust as needed */
   width: auto; /* Maintain aspect ratio */
   max-width: 150px; /* Prevent too wide */
   object-fit: contain; /* Similar to v-img's contain */
@@ -195,4 +198,18 @@
   background: rgba(0, 0, 0, 0.7) !important;
   backdrop-filter: blur(5px);
 }
+
+.v-toolbar-items{
+  color:white;
+}
+
+.v-btn--active{
+  border-bottom:3px solid blue !important;
+  background:transparent !important;
+}
+
+.v-btn:hover{
+  border-bottom:3px solid blue !important;
+}
+
   </style>

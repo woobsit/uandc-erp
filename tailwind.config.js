@@ -20,7 +20,7 @@ module.exports = {
           }
         },
         fontFamily: {
-          sans: ['Inter', 'sans-serif']
+          sans: ['Roboto','Inter', 'sans-serif']
         }
       },
     },
